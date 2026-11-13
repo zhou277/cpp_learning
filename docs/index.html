@@ -394,10 +394,33 @@ std::cout &lt;&lt; wider_mm(right, right) &lt;&lt; '\n';</code></pre></div><p><s
 <div class="answer-step">
 <p>依次输出 0、0.4、0。<br class="sentence-break">练习把引用版改成接受可能缺失的指针。<br class="sentence-break">参考实现是 <code>void reset(double* p) { if (p != nullptr) { *p = 0.0; } }</code>。<br class="sentence-break">调用 <code>reset(&amp;angle)</code> 修改角度，<code>reset(nullptr)</code> 跳过修改。</p>
 </div>
-<p><strong>核对结果</strong><br>0.25 清零得到 0；空指针调用正常返回。</p></details></div></section><section class="course-lesson" id="stage-2-lesson-2"><h2>第 2 课 · 存储期、生命周期与失效</h2><div class="lesson-part"><h2>1. 概念与对应示例</h2><div class="lesson-key"><strong>先认识本课术语</strong><ul class="concept-points"><li><strong>存储期</strong>　对象所用存储能维持多久；普通局部变量通常有自动存储期。</li><li><strong>生命周期与悬空</strong>　生命周期是对象已存在并可正常访问的时间。对象销毁后，仍指向原对象的指针称为悬空指针。</li><li><strong>快照与 optional</strong>　快照是某一刻数据的副本；optional 表示存在一个值或没有值。</li></ul></div><div class="lesson-key"><strong>本课要点</strong><ul class="concept-points"><li>缓存拥有容器元素，按值返回的快照有独立生命周期。</li></ul></div><div class="concept-pair"><section class="lesson-block concept"><h4>概念 2.2.1</h4>
+<p><strong>核对结果</strong><br>0.25 清零得到 0；空指针调用正常返回。</p></details></div></section><section class="course-lesson" id="stage-2-lesson-2"><h2>第 2 课 · 存储期、生命周期与失效</h2><div class="lesson-part"><h2>1. 概念与对应示例</h2><div class="lesson-key"><strong>先认识本课术语</strong><ul class="concept-points"><li><strong>存储期</strong>　对象所用存储能维持多久；普通局部变量通常有自动存储期。</li><li><strong>生命周期与悬空</strong>　生命周期是对象已存在并可正常访问的时间。对象销毁后，仍指向原对象的指针称为悬空指针。</li><li><strong>快照与 optional</strong>　快照是某一刻数据的副本；optional 表示存在一个值或没有值。</li></ul></div><div class="lesson-key"><strong>本课要点</strong><ul class="concept-points"><li>缓存拥有容器元素，按值返回的快照有独立生命周期。</li></ul></div><div class="concept-pair"><section class="lesson-block concept"><h4>概念 2.2.1 · class 的用法</h4><ul class="concept-points"><li><strong>类和对象</strong>　<code>class SampleCounter { ... };</code> 定义一种类型，末尾要有分号。<code>SampleCounter left{0};</code> 用这个类型创建一个对象。</li><li><strong>访问权限</strong>　<code>public:</code> 下的成员是调用接口。<code>private:</code> 下的成员由类内部管理。<code>class</code> 默认私有，<code>struct</code> 默认公开，两者都能定义成员函数和构造函数。</li><li><strong>构造函数</strong>　<code>SampleCounter(int initial_count) : count_{initial_count} {}</code> 在创建对象时初始化成员。冒号后的部分叫成员初始化列表。<code>explicit</code> 防止整数被隐式转成计数器。</li><li><strong>成员函数</strong>　用点号调用对象的方法。<code>left.record()</code> 更新左侧对象。<code>left.count()</code> 读取它的计数。函数末尾的 <code>const</code> 允许只读调用。</li><li><strong>对应 History</strong>　<code>append()</code> 是公开写入接口，<code>latest() const</code> 是只读查询，<code>samples_</code> 是私有存储。没有手写构造函数时，本例的容器会默认构造为空。</li></ul></section><section class="lesson-block example"><h4>示例 2.2.1 · 左右臂分别计数</h4><div class="example-frame"><div class="snippet"><button type="button" class="copy">复制代码</button><pre><code>#include &lt;iostream&gt;
+
+class SampleCounter {
+public:
+    <span class="tok-comment">// 构造函数与类同名，没有返回类型。</span>
+    explicit SampleCounter(int initial_count) : count_{initial_count} {}
+
+    <span class="tok-comment">// 修改当前对象的计数。</span>
+    void record() { ++count_; }
+
+    <span class="tok-comment">// 末尾的 const 表示这个成员函数只读。</span>
+    int count() const { return count_; }
+
+private:
+    <span class="tok-comment">// 调用方通过公开成员函数操作计数。</span>
+    int count_;
+};
+
+int main() {
+    SampleCounter left{0};
+    SampleCounter right{2};
+    left.record();
+    std::cout &lt;&lt; left.count() &lt;&lt; ' ' &lt;&lt; right.count() &lt;&lt; '\n';
+}</code></pre></div><p>输出 <code>1 2</code>。<br>两只机械臂各有自己的计数。<br>如果在 <code>main</code> 中直接写 <code>left.count_ = 5;</code>，编译器会报告私有成员不可访问。</p></div></section></div><div class="concept-pair"><section class="lesson-block concept"><h4>概念 2.2.2</h4>
 <ul class="concept-points"><li>块内普通局部变量通常具有自动存储期，离开块时销毁。</li><li>局部 <code>static</code> 对象可以跨调用存活。</li><li>动态分配对象的存活时间由其所有权管理。</li><li>存储期描述存储的持续时间，生命周期描述对象何时存在。</li><li>常见实现用栈承载自动变量、用堆承载动态分配，编译器也可以把局部值放在寄存器中。</li></ul>
 <ul class="concept-points"><li><code>std::vector</code> 扩容重新分配时，旧元素的指针、引用和迭代器都失效。</li><li>返回局部变量的地址同样会留下悬空指针。</li><li>以下缓存返回一个值副本，调用方可在缓存更新后继续读取旧快照。</li></ul>
-</section><section class="lesson-block example"><h4>示例 2.2.1</h4><div class="example-frame">
+</section><section class="lesson-block example"><h4>示例 2.2.2</h4><div class="example-frame">
 <div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-comment">// 为什么这样写：optional 表达空缓存，返回值副本独立于内部容器。</span>
 <span class="tok-comment">// 运行结果：先输出 false，追加第二帧后旧快照仍打印 0.25。</span>
 
@@ -440,7 +463,7 @@ std::cout &lt;&lt; wider_mm(right, right) &lt;&lt; '\n';</code></pre></div><p><s
         <span class="tok-type">std</span><span class="tok-punct">:</span><span class="tok-punct">:</span>cout <span class="tok-punct">&lt;</span><span class="tok-punct">&lt;</span> snapshot<span class="tok-punct">-</span><span class="tok-punct">&gt;</span>left_rad <span class="tok-punct">&lt;</span><span class="tok-punct">&lt;</span> <span class="tok-string">'\n'</span><span class="tok-punct">;</span>
     <span class="tok-punct">}</span>
 <span class="tok-punct">}</span></code></pre></div>
-</div></section></div></div><div class="lesson-part"><h2>2. 练习题目与要求</h2><section class="lesson-block exercise"><h4>练习 2.2.1 · 保留最近 100 帧</h4><p><strong>任务</strong><br>插入编号 1 至 101，插入第一帧后保存快照。</p><p><strong>验收</strong><br>最旧 2，最新 101，旧快照仍为 1。</p></section></div><div class="lesson-part"><h2>3. 解答</h2><details id="stage-2-lesson-2-answers"><summary>解答 2.2.1 · 保留最近 100 帧</summary><h3>容量限制和旧快照</h3>
+</div></section></div></div><div class="lesson-part"><h2>2. 练习题目与要求</h2><section class="lesson-block exercise"><h4>练习 2.2.1 · 保留最近 100 帧</h4><p><strong>任务</strong><br>插入编号 1 至 101，插入第一帧后保存快照。</p><p><strong>验收</strong><br>最旧 2，最新 101，旧快照仍为 1。</p></section><section class="lesson-block exercise"><h4>练习 2.2.2 · 重置计数</h4><p>给类增加公开的 <code>reset()</code>。<br>先记录一次，再重置左臂，验证右臂保持原值。</p></section></div><div class="lesson-part"><h2>3. 解答</h2><details id="stage-2-lesson-2-answers"><summary>解答 2.2.1 · 保留最近 100 帧</summary><h3>容量限制和旧快照</h3>
 <div class="answer-step">
 <p>给原来的 <code>History</code> 增加查询函数并修改 <code>append</code>。</p>
 </div>
@@ -465,7 +488,13 @@ std::cout &lt;&lt; wider_mm(right, right) &lt;&lt; '\n';</code></pre></div><p><s
 <div class="answer-step">
 <p>先插入编号 1，把编号放在 <code>left_rad</code> 字段，取 <code>latest()</code> 保存为旧快照。<br class="sentence-break">再插入 2 到 101，<code>oldest()-&gt;left_rad</code> 应为 2，<code>latest()-&gt;left_rad</code> 应为 101，旧快照仍为 1。<br class="sentence-break">删除 vector 首元素会移动后续元素。<br class="sentence-break">若持续从两端增删，可把内部容器换成 <code>std::deque&lt;Sample&gt;</code>，并用 <code>pop_front()</code> 删除首帧。</p>
 </div>
-<p><strong>核对结果</strong><br>最旧 2，最新 101，旧快照仍为 1。</p></details></div></section><section class="course-lesson" id="stage-2-lesson-3"><h2>第 3 课 · 对齐、填充和数据边界</h2><div class="lesson-part"><h2>1. 概念与对应示例</h2><div class="lesson-key"><strong>先认识本课术语</strong><ul class="concept-points"><li><strong>对齐与填充</strong>　对齐规定对象地址应满足的倍数约束；编译器可能插入空字节满足约束。</li><li><strong>字节序</strong>　多字节数值在数据中的排列顺序；高位优先时 0x0102 写成 01 02。</li></ul></div><div class="lesson-key"><strong>本课要点</strong><ul class="concept-points"><li>结构体的填充依实现而定。</li><li>协议应显式定义字段宽度和字节序。</li></ul></div><div class="concept-pair"><section class="lesson-block concept"><h4>概念 2.3.1</h4>
+<p><strong>核对结果</strong><br>最旧 2，最新 101，旧快照仍为 1。</p></details><details><summary>解答 2.2.2 · 重置计数</summary><div class="snippet"><button type="button" class="copy">复制代码</button><pre><code><span class="tok-comment">// 加到 public: 下</span>
+void reset() { count_ = 0; }
+
+<span class="tok-comment">// 在 main 中创建对象后测试</span>
+left.record();
+left.reset();
+std::cout &lt;&lt; left.count() &lt;&lt; ' ' &lt;&lt; right.count() &lt;&lt; '\n';</code></pre></div><p>输出 <code>0 2</code>。<br>成员函数修改的是调用它的那个对象。</p></details></div></section><section class="course-lesson" id="stage-2-lesson-3"><h2>第 3 课 · 对齐、填充和数据边界</h2><div class="lesson-part"><h2>1. 概念与对应示例</h2><div class="lesson-key"><strong>先认识本课术语</strong><ul class="concept-points"><li><strong>对齐与填充</strong>　对齐规定对象地址应满足的倍数约束；编译器可能插入空字节满足约束。</li><li><strong>字节序</strong>　多字节数值在数据中的排列顺序；高位优先时 0x0102 写成 01 02。</li></ul></div><div class="lesson-key"><strong>本课要点</strong><ul class="concept-points"><li>结构体的填充依实现而定。</li><li>协议应显式定义字段宽度和字节序。</li></ul></div><div class="concept-pair"><section class="lesson-block concept"><h4>概念 2.3.1</h4>
 <ul class="concept-points"><li>用 <code>sizeof</code> 查看对象所占字节数，用 <code>alignof</code> 查看对齐要求。</li><li>成员之间和对象末尾可能有填充，<code>sizeof</code> 的结果受平台和类型布局影响。</li><li>把 <code>bool</code>、<code>double</code> 和 <code>int</code> 调换顺序，分别测量两种结构体。</li><li>对机器人数据包，应逐字段定义编码、字节序与长度。</li><li>结构体的内存布局由本地实现决定。</li></ul>
 </section><section class="lesson-block example"><h4>示例 2.3.1</h4><div class="example-frame"><p><code>std::cout &lt;&lt; sizeof(Sample) &lt;&lt; ' ' &lt;&lt; alignof(Sample);</code></p></div></section></div></div><div class="lesson-part"><h2>2. 练习题目与要求</h2><section class="lesson-block exercise"><h4>练习 2.3.1 · 编码故障码</h4><p><strong>任务</strong><br>将 0x0102 拆为高低两个字节，再还原为 16 位值。</p><p><strong>验收</strong><br>两个字节依次为 0x01、0x02，还原为 0x0102。</p></section></div><div class="lesson-part"><h2>3. 解答</h2><details id="stage-2-lesson-3-answers"><summary>解答 2.3.1 · 编码故障码</summary><h3>观察填充</h3>
 <div class="answer-step">
