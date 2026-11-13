@@ -23,7 +23,10 @@
 <div class="lesson-nav" aria-label="本阶段课节"><h2>本阶段课节</h2><ol><li><a href="#stage-1-lesson-1">程序结构、变量、初始化与编译运行</a></li><li><a href="#stage-1-lesson-2">表达式、分支和输入</a></li><li><a href="#stage-1-lesson-3">循环和容器</a></li><li><a href="#stage-1-lesson-4">函数、结构体与枚举</a></li><li><a href="#stage-1-lesson-5">独立完成双臂检查器</a></li></ol></div><section class="course-lesson" id="stage-1-lesson-1"><h2>第 1 课 · 程序结构、变量、初始化与编译运行</h2><div class="lesson-part"><h2>1. 概念与对应示例</h2><div class="lesson-key"><strong>本课要点</strong><ul class="concept-points"><li>程序编译经过预处理、编译与链接。</li><li>用 -c 可以只生成目标文件；省略 -c 时通常会继续链接。</li></ul></div><div class="concept-pair"><section class="lesson-block concept"><h4>概念 1.1.1</h4>
 <ul class="concept-points"><li>把以下代码保存为 <code>main.cpp</code>。</li><li>预处理指令 <code>#include</code> 引入标准库声明，<code>main</code> 是入口，花括号划定作用域，语句通常以分号结束。</li><li><code>std::cout</code> 输出到终端，<code>return 0</code> 表示正常退出。</li></ul>
 </section><section class="lesson-block example"><h4>示例 1.1.1</h4><div class="example-frame">
-<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-keyword">#include</span> <span class="tok-punct">&lt;</span>iostream<span class="tok-punct">&gt;</span>
+<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-comment">// 为什么这样写：main 是入口，const 固定名称和关节数，boolalpha 把布尔值显示成文字。</span>
+<span class="tok-comment">// 运行结果：左臂角度更新为 0.3，右臂保持 -0.2；省略 boolalpha 会显示 1 和 0。</span>
+
+<span class="tok-keyword">#include</span> <span class="tok-punct">&lt;</span>iostream<span class="tok-punct">&gt;</span>
 <span class="tok-keyword">#include</span> <span class="tok-punct">&lt;</span>string<span class="tok-punct">&gt;</span>
 
 <span class="tok-keyword">int</span> main<span class="tok-punct">(</span><span class="tok-punct">)</span> <span class="tok-punct">{</span>
@@ -43,7 +46,10 @@
 <span class="tok-punct">}</span></code></pre></div>
 
 
-<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code>g<span class="tok-punct">+</span><span class="tok-punct">+</span> <span class="tok-punct">-</span><span class="tok-type">std</span><span class="tok-punct">=</span>c<span class="tok-punct">+</span><span class="tok-punct">+</span><span class="tok-number">17</span> <span class="tok-punct">-</span><span class="tok-type">Wall</span> <span class="tok-punct">-</span><span class="tok-type">Wextra</span> <span class="tok-punct">-</span><span class="tok-type">Wpedantic</span> main<span class="tok-punct">.</span>cpp <span class="tok-punct">-</span>o arm_status
+<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-comment"># 为什么这样写：-std 选择语言版本，警告选项提示常见问题，-o 指定程序文件名。</span>
+<span class="tok-comment"># 运行结果：编译成功生成 arm_status；有语法错误时应先修复再运行。</span>
+
+g<span class="tok-punct">+</span><span class="tok-punct">+</span> <span class="tok-punct">-</span><span class="tok-type">std</span><span class="tok-punct">=</span>c<span class="tok-punct">+</span><span class="tok-punct">+</span><span class="tok-number">17</span> <span class="tok-punct">-</span><span class="tok-type">Wall</span> <span class="tok-punct">-</span><span class="tok-type">Wextra</span> <span class="tok-punct">-</span><span class="tok-type">Wpedantic</span> main<span class="tok-punct">.</span>cpp <span class="tok-punct">-</span>o arm_status
 <span class="tok-punct">.</span>/arm_status</code></pre></div>
 </div></section></div>
 <div class="concept-pair"><section class="lesson-block concept"><h4>概念 1.1.2</h4>
@@ -55,17 +61,26 @@
 </section><section class="lesson-block example"><h4>示例 1.1.3</h4><div class="example-frame">
 <div class="table"><table><tr><th>要表达的数据</th><th>定义示例</th><th>之后如何使用</th></tr><tr><td>关节数量</td><td><code>int joint_count{6};</code></td><td><code>++joint_count;</code> 把数量加一</td></tr><tr><td>关节角度</td><td><code>double angle_rad{0.25};</code></td><td><code>angle_rad = -0.2;</code> 更新读数</td></tr><tr><td>是否就绪</td><td><code>bool ready{false};</code></td><td><code>ready = true;</code> 更新标记</td></tr><tr><td>关节名称</td><td><code>std::string name{&quot;left_joint_1&quot;};</code></td><td><code>name += &quot;_sim&quot;;</code> 追加文本，需包含 <code>&lt;string&gt;</code></td></tr><tr><td>固定角度上限</td><td><code>const double limit_rad{1.5};</code></td><td>可以比较，重新赋值会报错</td></tr></table></div>
 <p>把下面片段放进第一课的 <code>main</code>，观察输出。<br class="sentence-break">定义时的花括号给出初值，第二行给已经存在的变量赋值。</p>
-<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-keyword">double</span> angle_rad<span class="tok-punct">{</span><span class="tok-punct">}</span><span class="tok-punct">;</span>       <span class="tok-comment">// 初始化为 0.0</span>
+<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-comment">// 为什么这样写：先初始化读数，再用测量值减去固定零偏。</span>
+<span class="tok-comment">// 运行结果：输出约 0.2 rad；把减号改成加号会得到 0.3 rad。</span>
+
+<span class="tok-keyword">double</span> angle_rad<span class="tok-punct">{</span><span class="tok-punct">}</span><span class="tok-punct">;</span>       <span class="tok-comment">// 初始化为 0.0</span>
 angle_rad <span class="tok-punct">=</span> <span class="tok-number">0.25</span><span class="tok-punct">;</span>         <span class="tok-comment">// 更新为 0.25</span>
 <span class="tok-keyword">const</span> <span class="tok-keyword">double</span> zero_offset_rad<span class="tok-punct">{</span><span class="tok-number">0.05</span><span class="tok-punct">}</span><span class="tok-punct">;</span>
 <span class="tok-keyword">const</span> <span class="tok-keyword">double</span> corrected_rad<span class="tok-punct">{</span>angle_rad <span class="tok-punct">-</span> zero_offset_rad<span class="tok-punct">}</span><span class="tok-punct">;</span>
 <span class="tok-type">std</span><span class="tok-punct">:</span><span class="tok-punct">:</span>cout <span class="tok-punct">&lt;</span><span class="tok-punct">&lt;</span> corrected_rad <span class="tok-punct">&lt;</span><span class="tok-punct">&lt;</span> <span class="tok-string">'\n'</span><span class="tok-punct">;</span>  <span class="tok-comment">// 0.2</span></code></pre></div>
 </div></section></div></div><div class="lesson-part"><h2>2. 练习题目与要求</h2><section class="lesson-block exercise"><h4>练习 1.1.1 · 双臂电压和故障码</h4><p><strong>任务</strong><br>在第一课 main 中增加两臂电压和整数故障码，打印标签、数值与单位。</p><p><strong>验收</strong><br>左臂 24.2 V，故障码 0；右臂 22.8 V，故障码 7。</p></section>
-<section class="lesson-block exercise"><h4>练习 1.1.2 · 夹爪变量定义</h4><p><strong>任务</strong><br>定义名称、闭合状态、当前宽度和最大宽度，把当前宽度从 40 改为 32 mm。</p><p><strong>验收</strong><br>left_gripper: 32 mm；最大宽度仍为 85 mm。</p></section></div><div class="lesson-part"><h2>3. 解答</h2><details id="stage-1-lesson-1-answers"><summary>解答 1.1.1 · 双臂电压和故障码</summary><p><strong>实现步骤</strong><br>在 main 里定义 const double left_voltage_v{24.2} 和 right_voltage_v{22.8}。<br class="sentence-break">用 const int 保存 0 与 7。<br class="sentence-break">用 std::cout 分两行输出，每行附上 V 和 fault 标签。</p><div class="snippet"><button class="copy" type="button">复制代码</button><pre><code>const double left_voltage_v{24.2}, right_voltage_v{22.8};
+<section class="lesson-block exercise"><h4>练习 1.1.2 · 夹爪变量定义</h4><p><strong>任务</strong><br>定义名称、闭合状态、当前宽度和最大宽度，把当前宽度从 40 改为 32 mm。</p><p><strong>验收</strong><br>left_gripper: 32 mm；最大宽度仍为 85 mm。</p></section></div><div class="lesson-part"><h2>3. 解答</h2><details id="stage-1-lesson-1-answers"><summary>解答 1.1.1 · 双臂电压和故障码</summary><p><strong>实现步骤</strong><br>在 main 里定义 const double left_voltage_v{24.2} 和 right_voltage_v{22.8}。<br class="sentence-break">用 const int 保存 0 与 7。<br class="sentence-break">用 std::cout 分两行输出，每行附上 V 和 fault 标签。</p><div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-comment">// 为什么这样写：用 double 保存伏特小数，用 int 保存故障编号。</span>
+<span class="tok-comment">// 运行结果：左臂打印 24.2 V 和 0，右臂打印 22.8 V 和 7。</span>
+
+const double left_voltage_v{24.2}, right_voltage_v{22.8};
 const int left_fault{0}, right_fault{7};
 std::cout &lt;&lt; "left: " &lt;&lt; left_voltage_v &lt;&lt; " V, fault=" &lt;&lt; left_fault &lt;&lt; '\n';
 std::cout &lt;&lt; "right: " &lt;&lt; right_voltage_v &lt;&lt; " V, fault=" &lt;&lt; right_fault &lt;&lt; '\n';</code></pre></div><p><strong>核对结果</strong><br>左臂 24.2 V，故障码 0；右臂 22.8 V，故障码 7。</p></details>
-<details><summary>解答 1.1.2 · 夹爪变量定义</summary><p><strong>实现步骤</strong><br>定义 const std::string name{"left_gripper"}、bool closed{false}、double opening_mm{40.0} 和 const double max_opening_mm{85.0}。<br class="sentence-break">执行 opening_mm = 32.0;，再用 std::cout 输出名称和当前宽度。</p><div class="snippet"><button class="copy" type="button">复制代码</button><pre><code>const std::string name{"left_gripper"};
+<details><summary>解答 1.1.2 · 夹爪变量定义</summary><p><strong>实现步骤</strong><br>定义 const std::string name{"left_gripper"}、bool closed{false}、double opening_mm{40.0} 和 const double max_opening_mm{85.0}。<br class="sentence-break">执行 opening_mm = 32.0;，再用 std::cout 输出名称和当前宽度。</p><div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-comment">// 为什么这样写：最大宽度固定，当前宽度需要更新，所以只给上限加 const。</span>
+<span class="tok-comment">// 运行结果：当前宽度变为 32 mm，闭合状态为 false，限宽检查为 true。</span>
+
+const std::string name{"left_gripper"};
 const bool closed{false};
 double opening_mm{40.0};
 const double max_opening_mm{85.0};
@@ -77,7 +92,10 @@ std::cout &lt;&lt; std::boolalpha &lt;&lt; closed &lt;&lt; ' ' &lt;&lt; (opening
 <div class="concept-pair"><section class="lesson-block concept"><h4>概念 1.2.2</h4><h3>怎么写条件和分支</h3>
 <ul class="concept-points"><li><code>if (条件) { ... } else if (另一个条件) { ... } else { ... }</code> 按顺序检查条件，只执行第一个满足条件的分支。</li><li>花括号里的局部变量只能在该块中使用。</li><li>比较表达式 <code>angle_rad &gt; 1.5</code> 的结果是 <code>bool</code>，可以先存到变量里，也可以直接写在括号内。</li></ul>
 </section><section class="lesson-block example"><h4>示例 1.2.2</h4><div class="example-frame">
-<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-keyword">const</span> <span class="tok-keyword">bool</span> ready<span class="tok-punct">{</span><span class="tok-keyword">true</span><span class="tok-punct">}</span><span class="tok-punct">;</span>
+<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-comment">// 为什么这样写：先检查就绪，再检查角度，可明确异常优先级。</span>
+<span class="tok-comment">// 运行结果：本例输出 invalid angle；ready 改为 false 后输出 not ready。</span>
+
+<span class="tok-keyword">const</span> <span class="tok-keyword">bool</span> ready<span class="tok-punct">{</span><span class="tok-keyword">true</span><span class="tok-punct">}</span><span class="tok-punct">;</span>
 <span class="tok-keyword">const</span> <span class="tok-keyword">double</span> angle_rad<span class="tok-punct">{</span><span class="tok-number">1.6</span><span class="tok-punct">}</span><span class="tok-punct">;</span>
 
 <span class="tok-keyword">if</span> <span class="tok-punct">(</span><span class="tok-punct">!</span>ready<span class="tok-punct">)</span> <span class="tok-punct">{</span>
@@ -91,7 +109,10 @@ std::cout &lt;&lt; std::boolalpha &lt;&lt; closed &lt;&lt; ' ' &lt;&lt; (opening
 <p>把片段放进 <code>main</code> 并包含 <code>&lt;cmath&gt;</code>。<br class="sentence-break">当前输出 <code>invalid angle</code>。<br class="sentence-break">把 <code>ready</code> 改成 <code>false</code>，第一项满足，输出 <code>not ready</code>。<br class="sentence-break">当 <code>ready</code> 为真且角度恰好是 <code>1.5</code> 时输出 <code>ok</code>。<br class="sentence-break">这里 <code>!</code> 取反，<code>||</code> 表示任一条件满足即为真。</p>
 </div></section></div></div><div class="lesson-part"><h2>2. 练习题目与要求</h2><section class="lesson-block exercise"><h4>练习 1.2.1 · 读取并校验双臂角度</h4><p><strong>任务</strong><br>读取两个 double，读入失败报错并退出 1；成功后检查有限性和闭区间 [-1.5, 1.5]。</p><p><strong>验收</strong><br>输入 -1.5 1.5 得 true true；0 1.51 得 true false；0 motor 退出 1。</p></section></div><div class="lesson-part"><h2>3. 解答</h2><details id="stage-1-lesson-2-answers"><summary>解答 1.2.1 · 读取并校验双臂角度</summary><h3>判断输入是否完整</h3>
 <div class="answer-step">
-<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-keyword">#include</span> <span class="tok-punct">&lt;</span>cmath<span class="tok-punct">&gt;</span>
+<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-comment">// 为什么这样写：先检查输入流，再检查有限性和闭区间。</span>
+<span class="tok-comment">// 运行结果：边界值通过，1.51 不通过，文字输入使程序退出 1。</span>
+
+<span class="tok-keyword">#include</span> <span class="tok-punct">&lt;</span>cmath<span class="tok-punct">&gt;</span>
 <span class="tok-keyword">#include</span> <span class="tok-punct">&lt;</span>iostream<span class="tok-punct">&gt;</span>
 
 <span class="tok-keyword">bool</span> in_range<span class="tok-punct">(</span><span class="tok-keyword">double</span> angle_rad<span class="tok-punct">)</span> <span class="tok-punct">{</span>
@@ -113,7 +134,10 @@ std::cout &lt;&lt; std::boolalpha &lt;&lt; closed &lt;&lt; ' ' &lt;&lt; (opening
 <h3>怎么定义容器和遍历元素</h3>
 <ul class="concept-points"><li><code>std::array&lt;元素类型, 元素数&gt; 名字{初始值...};</code> 需要 <code>&lt;array&gt;</code>，长度写在类型里。</li><li><code>std::vector&lt;元素类型&gt; 名字{初始值...};</code> 需要 <code>&lt;vector&gt;</code>，可用 <code>push_back</code> 追加数据。</li></ul>
 </section><section class="lesson-block example"><h4>示例 1.3.1</h4><div class="example-frame">
-<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-keyword">const</span> <span class="tok-type">std</span><span class="tok-punct">:</span><span class="tok-punct">:</span>array<span class="tok-punct">&lt;</span><span class="tok-keyword">double</span><span class="tok-punct">,</span> <span class="tok-number">3</span><span class="tok-punct">&gt;</span> home_rad<span class="tok-punct">{</span><span class="tok-number">0.0</span><span class="tok-punct">,</span> <span class="tok-number">0.1</span><span class="tok-punct">,</span> <span class="tok-punct">-</span><span class="tok-number">0.1</span><span class="tok-punct">}</span><span class="tok-punct">;</span>
+<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-comment">// 为什么这样写：array 表达固定关节数，vector 便于追加采样；需要关节编号时使用索引。</span>
+<span class="tok-comment">// 运行结果：先打印三个关节，再打印两个样本；索引条件改成 &lt;= 会访问末尾之外。</span>
+
+<span class="tok-keyword">const</span> <span class="tok-type">std</span><span class="tok-punct">:</span><span class="tok-punct">:</span>array<span class="tok-punct">&lt;</span><span class="tok-keyword">double</span><span class="tok-punct">,</span> <span class="tok-number">3</span><span class="tok-punct">&gt;</span> home_rad<span class="tok-punct">{</span><span class="tok-number">0.0</span><span class="tok-punct">,</span> <span class="tok-number">0.1</span><span class="tok-punct">,</span> <span class="tok-punct">-</span><span class="tok-number">0.1</span><span class="tok-punct">}</span><span class="tok-punct">;</span>
 <span class="tok-type">std</span><span class="tok-punct">:</span><span class="tok-punct">:</span>vector<span class="tok-punct">&lt;</span><span class="tok-keyword">double</span><span class="tok-punct">&gt;</span> samples_rad<span class="tok-punct">{</span><span class="tok-punct">}</span><span class="tok-punct">;</span>
 samples_rad<span class="tok-punct">.</span>push_back<span class="tok-punct">(</span><span class="tok-number">0.25</span><span class="tok-punct">)</span><span class="tok-punct">;</span>
 samples_rad<span class="tok-punct">.</span>push_back<span class="tok-punct">(</span><span class="tok-punct">-</span><span class="tok-number">0.20</span><span class="tok-punct">)</span><span class="tok-punct">;</span>
@@ -131,7 +155,10 @@ samples_rad<span class="tok-punct">.</span>push_back<span class="tok-punct">(</s
 <p>以下函数接受一只臂的采样序列。<br class="sentence-break">把它放在 <code>main</code> 前并包含 <code>&lt;vector&gt;</code>、<code>&lt;string&gt;</code> 和 <code>&lt;cstddef&gt;</code>，沿用上题的 <code>in_range</code>。</p>
 </div>
 <div class="answer-step">
-<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-type">std</span><span class="tok-punct">:</span><span class="tok-punct">:</span>size_t report<span class="tok-punct">(</span><span class="tok-keyword">const</span> <span class="tok-type">std</span><span class="tok-punct">:</span><span class="tok-punct">:</span>string<span class="tok-punct">&amp;</span> side<span class="tok-punct">,</span> <span class="tok-keyword">const</span> <span class="tok-type">std</span><span class="tok-punct">:</span><span class="tok-punct">:</span>vector<span class="tok-punct">&lt;</span><span class="tok-keyword">double</span><span class="tok-punct">&gt;</span><span class="tok-punct">&amp;</span> angles<span class="tok-punct">)</span> <span class="tok-punct">{</span>
+<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-comment">// 为什么这样写：用索引生成关节名，用计数器记录异常项。</span>
+<span class="tok-comment">// 运行结果：末项为 1.6 时报告第六关节；调用前应单独识别空数据。</span>
+
+<span class="tok-type">std</span><span class="tok-punct">:</span><span class="tok-punct">:</span>size_t report<span class="tok-punct">(</span><span class="tok-keyword">const</span> <span class="tok-type">std</span><span class="tok-punct">:</span><span class="tok-punct">:</span>string<span class="tok-punct">&amp;</span> side<span class="tok-punct">,</span> <span class="tok-keyword">const</span> <span class="tok-type">std</span><span class="tok-punct">:</span><span class="tok-punct">:</span>vector<span class="tok-punct">&lt;</span><span class="tok-keyword">double</span><span class="tok-punct">&gt;</span><span class="tok-punct">&amp;</span> angles<span class="tok-punct">)</span> <span class="tok-punct">{</span>
     <span class="tok-type">std</span><span class="tok-punct">:</span><span class="tok-punct">:</span>size_t errors<span class="tok-punct">{</span><span class="tok-punct">}</span><span class="tok-punct">;</span>
     <span class="tok-keyword">for</span> <span class="tok-punct">(</span><span class="tok-type">std</span><span class="tok-punct">:</span><span class="tok-punct">:</span>size_t i <span class="tok-punct">=</span> <span class="tok-number">0</span><span class="tok-punct">;</span> i <span class="tok-punct">&lt;</span> angles<span class="tok-punct">.</span>size<span class="tok-punct">(</span><span class="tok-punct">)</span><span class="tok-punct">;</span> <span class="tok-punct">+</span><span class="tok-punct">+</span>i<span class="tok-punct">)</span> <span class="tok-punct">{</span>
         <span class="tok-keyword">if</span> <span class="tok-punct">(</span><span class="tok-punct">!</span>in_range<span class="tok-punct">(</span>angles<span class="tok-punct">[</span>i<span class="tok-punct">]</span><span class="tok-punct">)</span><span class="tok-punct">)</span> <span class="tok-punct">{</span>
@@ -148,7 +175,10 @@ samples_rad<span class="tok-punct">.</span>push_back<span class="tok-punct">(</s
 <p><strong>核对结果</strong><br>左臂全零、右臂第六个角度为 1.6 时，仅报告 right_joint_6，总数为 1；空数据报告 missing。</p></details></div></section><section class="course-lesson" id="stage-1-lesson-4"><h2>第 4 课 · 函数、结构体与枚举</h2><div class="lesson-part"><h2>1. 概念与对应示例</h2><div class="lesson-key"><strong>本课要点</strong><ul class="concept-points"><li>把输入、判定和显示分开，可以在无终端输入时测试判定。</li><li>检查顺序决定同时出现多个故障时报告哪一个。</li></ul></div><div class="concept-pair"><section class="lesson-block concept"><h4>概念 1.4.1</h4>
 <ul class="concept-points"><li>函数把判断规则从打印逻辑中提取出来。</li><li>小数值用值传递。</li><li>较大的状态对象可用 <code>const ArmState&amp;</code> 传入，只读访问且省去拷贝。</li><li><code>struct</code> 把相关字段组合，<code>enum class</code> 限制状态取值并给枚举名划定作用域。</li></ul>
 </section><section class="lesson-block example"><h4>示例 1.4.1</h4><div class="example-frame">
-<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-keyword">#include</span> <span class="tok-punct">&lt;</span>array<span class="tok-punct">&gt;</span>
+<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-comment">// 为什么这样写：check 只读状态对象，并优先判断未就绪。</span>
+<span class="tok-comment">// 运行结果：本例左臂通过，右臂因 1.6 rad 不通过。</span>
+
+<span class="tok-keyword">#include</span> <span class="tok-punct">&lt;</span>array<span class="tok-punct">&gt;</span>
 <span class="tok-keyword">#include</span> <span class="tok-punct">&lt;</span>cmath<span class="tok-punct">&gt;</span>
 <span class="tok-keyword">#include</span> <span class="tok-punct">&lt;</span>iostream<span class="tok-punct">&gt;</span>
 
@@ -182,7 +212,10 @@ samples_rad<span class="tok-punct">.</span>push_back<span class="tok-punct">(</s
 <div class="concept-pair"><section class="lesson-block concept"><h4>概念 1.4.2</h4><h3>怎么定义函数、结构体和枚举</h3>
 <ul><li>函数形式为 <code>返回类型 函数名(参数类型 参数名) { 函数体 }</code>。<br class="sentence-break">例如 <code>double corrected_angle(double measured_rad, double offset_rad) { return measured_rad - offset_rad; }</code>。<br class="sentence-break">把函数定义放在 <code>main</code> 前，在 <code>main</code> 中调用 <code>corrected_angle(0.25, 0.05)</code>，返回约 0.20。</li><li>声明只提供接口，例如 <code>double corrected_angle(double measured_rad, double offset_rad);</code>。<br class="sentence-break">若把定义移到 <code>main</code> 后，先在 <code>main</code> 前写这条声明，使编译器在处理调用时知道参数和返回类型。</li><li><code>struct</code> 的定义给出成员的名字、类型和默认值。<br class="sentence-break">定义末尾写分号。<br class="sentence-break">创建结构体对象后，用点号访问成员。</li><li><code>enum class</code> 定义一组命名值，用 <code>类型名::值名</code> 访问。<br class="sentence-break">可以比较枚举值，再输出对应文字。</li></ul>
 </section><section class="lesson-block example"><h4>示例 1.4.2</h4><div class="example-frame">
-<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-keyword">struct</span> <span class="tok-type">GripperState</span> <span class="tok-punct">{</span>
+<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-comment">// 为什么这样写：枚举区分等待、张开和闭合，先用 ready 判定能否分类。</span>
+<span class="tok-comment">// 运行结果：就绪且宽度不大于 1 mm 时返回 closed；未就绪返回 waiting。</span>
+
+<span class="tok-keyword">struct</span> <span class="tok-type">GripperState</span> <span class="tok-punct">{</span>
     <span class="tok-keyword">double</span> opening_mm<span class="tok-punct">{</span><span class="tok-punct">}</span><span class="tok-punct">;</span>
     <span class="tok-keyword">bool</span> ready<span class="tok-punct">{</span><span class="tok-punct">}</span><span class="tok-punct">;</span>
 <span class="tok-punct">}</span><span class="tok-punct">;</span>
@@ -198,7 +231,10 @@ samples_rad<span class="tok-punct">.</span>push_back<span class="tok-punct">(</s
 
 <p>在 <code>main</code> 中写 <code>GripperState left{32.0, true};</code>，按成员顺序初始化宽度和就绪标记。<br class="sentence-break">调用 <code>classify(left)</code> 返回 <code>GripperStatus::open</code>。<br class="sentence-break">执行 <code>left.opening_mm = 0.8;</code> 再调用，返回 <code>closed</code>。<br class="sentence-break">把 <code>left.ready</code> 改为 <code>false</code> 后返回 <code>waiting</code>。<br class="sentence-break"><code>const GripperState&amp;</code> 让函数读取调用者的对象，函数体内给 <code>state.opening_mm</code> 赋值会报错。</p>
 </div></section></div></div><div class="lesson-part"><h2>2. 练习题目与要求</h2><section class="lesson-block exercise"><h4>练习 1.4.1 · 状态优先级和文字输出</h4><p><strong>任务</strong><br>定义状态到文字的转换；测试未就绪且角度越界，以及已就绪但包含 NaN。</p><p><strong>验收</strong><br>分别返回 not_ready 和 invalid_angle。</p></section>
-<section class="lesson-block exercise"><h4>练习 1.4.2 · 比较两只夹爪宽度</h4><p><strong>任务</strong><br>定义接收两个 const GripperState&amp; 的函数，返回较大的宽度，并测试两值相等。</p><p><strong>验收</strong><br>32 和 40 返回 40；40 和 40 返回 40。</p></section></div><div class="lesson-part"><h2>3. 解答</h2><details id="stage-1-lesson-4-answers"><summary>解答 1.4.1 · 状态优先级和文字输出</summary><p><strong>实现步骤</strong><br>在 check 内先判断 !arm.ready，再遍历角度。<br class="sentence-break">用 switch 把 Status::not_ready、Status::invalid_angle 和 Status::ok 映射成对应字符串。<br class="sentence-break">测试 NaN 时先把 ready 设为 true，否则会提前返回。</p><div class="snippet"><button class="copy" type="button">复制代码</button><pre><code>const char* label(Status status) {
+<section class="lesson-block exercise"><h4>练习 1.4.2 · 比较两只夹爪宽度</h4><p><strong>任务</strong><br>定义接收两个 const GripperState&amp; 的函数，返回较大的宽度，并测试两值相等。</p><p><strong>验收</strong><br>32 和 40 返回 40；40 和 40 返回 40。</p></section></div><div class="lesson-part"><h2>3. 解答</h2><details id="stage-1-lesson-4-answers"><summary>解答 1.4.1 · 状态优先级和文字输出</summary><p><strong>实现步骤</strong><br>在 check 内先判断 !arm.ready，再遍历角度。<br class="sentence-break">用 switch 把 Status::not_ready、Status::invalid_angle 和 Status::ok 映射成对应字符串。<br class="sentence-break">测试 NaN 时先把 ready 设为 true，否则会提前返回。</p><div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-comment">// 为什么这样写：switch 将枚举映射为文字，同一坏帧切换 ready 可验证分支优先级。</span>
+<span class="tok-comment">// 运行结果：先输出 not_ready，再输出 invalid_angle。</span>
+
+const char* label(Status status) {
     switch (status) {
         case Status::ok: return "ok";
         case Status::not_ready: return "not_ready";
@@ -212,7 +248,10 @@ arm.joint_rad[0] = std::numeric_limits&lt;double&gt;::quiet_NaN();
 std::cout &lt;&lt; label(check(arm)) &lt;&lt; '\n';
 arm.ready = true;
 std::cout &lt;&lt; label(check(arm)) &lt;&lt; '\n';</code></pre></div><p><strong>核对结果</strong><br>分别返回 not_ready 和 invalid_angle。</p></details>
-<details><summary>解答 1.4.2 · 比较两只夹爪宽度</summary><p><strong>实现步骤</strong><br>定义 double wider_mm(const GripperState&amp; a, const GripperState&amp; b) { return a.opening_mm &gt;= b.opening_mm ? a.opening_mm : b.opening_mm; }。<br class="sentence-break">依次传入宽度为 32、40 的对象，再传入两个宽度均为 40 的对象。</p><div class="snippet"><button class="copy" type="button">复制代码</button><pre><code>double wider_mm(const GripperState&amp; a, const GripperState&amp; b) {
+<details><summary>解答 1.4.2 · 比较两只夹爪宽度</summary><p><strong>实现步骤</strong><br>定义 double wider_mm(const GripperState&amp; a, const GripperState&amp; b) { return a.opening_mm &gt;= b.opening_mm ? a.opening_mm : b.opening_mm; }。<br class="sentence-break">依次传入宽度为 32、40 的对象，再传入两个宽度均为 40 的对象。</p><div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-comment">// 为什么这样写：只读引用避免拷贝并约束函数不修改两只夹爪。</span>
+<span class="tok-comment">// 运行结果：两次输出均为 40；两值相等时返回其中一个相同值。</span>
+
+double wider_mm(const GripperState&amp; a, const GripperState&amp; b) {
     return a.opening_mm &gt;= b.opening_mm ? a.opening_mm : b.opening_mm;
 }
 // 在 main 中测试
@@ -223,7 +262,10 @@ std::cout &lt;&lt; wider_mm(right, right) &lt;&lt; '\n';</code></pre></div><p><s
 <p>沿用第 4 课的类型与 <code>check</code>，把下列函数加入源文件并替换原有 <code>main</code>。<br class="sentence-break">读入格式为每臂一个 0/1 和六个角度，共 14 个字段。<br class="sentence-break">以下代码需要额外包含 <code>&lt;cstddef&gt;</code>。</p>
 </div>
 <div class="answer-step">
-<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-keyword">const</span> <span class="tok-keyword">char</span><span class="tok-punct">*</span> label<span class="tok-punct">(</span><span class="tok-type">Status</span> status<span class="tok-punct">)</span> <span class="tok-punct">{</span>
+<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-comment">// 为什么这样写：读取函数逐字段验证，判定与输出交给已有函数。</span>
+<span class="tok-comment">// 运行结果：完整输入按臂输出状态；缺少角度或就绪值非法时退出 1。</span>
+
+<span class="tok-keyword">const</span> <span class="tok-keyword">char</span><span class="tok-punct">*</span> label<span class="tok-punct">(</span><span class="tok-type">Status</span> status<span class="tok-punct">)</span> <span class="tok-punct">{</span>
     <span class="tok-keyword">switch</span> <span class="tok-punct">(</span>status<span class="tok-punct">)</span> <span class="tok-punct">{</span>
         <span class="tok-keyword">case</span> <span class="tok-type">Status</span><span class="tok-punct">:</span><span class="tok-punct">:</span>ok<span class="tok-punct">:</span> <span class="tok-keyword">return</span> <span class="tok-string">&quot;ok&quot;</span><span class="tok-punct">;</span>
         <span class="tok-keyword">case</span> <span class="tok-type">Status</span><span class="tok-punct">:</span><span class="tok-punct">:</span>not_ready<span class="tok-punct">:</span> <span class="tok-keyword">return</span> <span class="tok-string">&quot;not_ready&quot;</span><span class="tok-punct">;</span>
@@ -275,7 +317,10 @@ std::cout &lt;&lt; wider_mm(right, right) &lt;&lt; '\n';</code></pre></div><p><s
 <ul class="concept-points"><li><code>&amp;sample</code> 取得对象地址，<code>*ptr</code> 访问指针所指对象。</li><li>引用初始化后绑定到同一对象，指针可重新赋值，并可用 <code>nullptr</code> 表示缺失。</li><li>传值创建独立参数对象，引用参数访问调用方对象。</li><li>用 <code>const Sample&amp;</code> 表达必有的只读输入，用 <code>const Sample*</code> 表达可能缺失的只读借用。</li></ul>
 </section><section class="lesson-block example"><h4>示例 2.1.1</h4><div class="example-frame"><p><code>double rad{0.25}; double&amp; ref = rad; ref = 0.0;</code></p></div></section></div></div><div class="lesson-part"><h2>2. 练习题目与要求</h2><section class="lesson-block exercise"><h4>练习 2.1.1 · 可空指针清零</h4><p><strong>任务</strong><br>编写 reset(double*)，用角度变量地址和 nullptr 分别调用。</p><p><strong>验收</strong><br>0.25 清零得到 0；空指针调用正常返回。</p></section></div><div class="lesson-part"><h2>3. 解答</h2><details id="stage-2-lesson-1-answers"><summary>解答 2.1.1 · 可空指针清零</summary><h3>哪个函数会修改调用方</h3>
 <div class="answer-step">
-<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-keyword">#include</span> <span class="tok-punct">&lt;</span>iostream<span class="tok-punct">&gt;</span>
+<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-comment">// 为什么这样写：值参数是副本，引用参数绑定原对象。</span>
+<span class="tok-comment">// 运行结果：依次打印 0、0.4、0，展示两种传参的差异。</span>
+
+<span class="tok-keyword">#include</span> <span class="tok-punct">&lt;</span>iostream<span class="tok-punct">&gt;</span>
 <span class="tok-keyword">void</span> reset_copy<span class="tok-punct">(</span><span class="tok-keyword">double</span> value<span class="tok-punct">)</span> <span class="tok-punct">{</span> value <span class="tok-punct">=</span> <span class="tok-number">0.0</span><span class="tok-punct">;</span> <span class="tok-type">std</span><span class="tok-punct">:</span><span class="tok-punct">:</span>cout <span class="tok-punct">&lt;</span><span class="tok-punct">&lt;</span> value <span class="tok-punct">&lt;</span><span class="tok-punct">&lt;</span> <span class="tok-string">'\n'</span><span class="tok-punct">;</span> <span class="tok-punct">}</span>
 <span class="tok-keyword">void</span> reset_ref<span class="tok-punct">(</span><span class="tok-keyword">double</span><span class="tok-punct">&amp;</span> value<span class="tok-punct">)</span> <span class="tok-punct">{</span> value <span class="tok-punct">=</span> <span class="tok-number">0.0</span><span class="tok-punct">;</span> <span class="tok-punct">}</span>
 <span class="tok-keyword">int</span> main<span class="tok-punct">(</span><span class="tok-punct">)</span> <span class="tok-punct">{</span>
@@ -293,7 +338,10 @@ std::cout &lt;&lt; wider_mm(right, right) &lt;&lt; '\n';</code></pre></div><p><s
 <ul class="concept-points"><li>块内普通局部变量通常具有自动存储期，离开块时销毁。</li><li>局部 <code>static</code> 对象可以跨调用存活。</li><li>动态分配对象的存活时间由其所有权管理。</li><li>存储期描述存储的持续时间，生命周期描述对象何时存在。</li><li>常见实现用栈承载自动变量、用堆承载动态分配，编译器也可以把局部值放在寄存器中。</li></ul>
 <ul class="concept-points"><li><code>std::vector</code> 扩容重新分配时，旧元素的指针、引用和迭代器都失效。</li><li>返回局部变量的地址同样会留下悬空指针。</li><li>以下缓存返回一个值副本，调用方可在缓存更新后继续读取旧快照。</li></ul>
 </section><section class="lesson-block example"><h4>示例 2.2.1</h4><div class="example-frame">
-<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-keyword">#include</span> <span class="tok-punct">&lt;</span>iostream<span class="tok-punct">&gt;</span>
+<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-comment">// 为什么这样写：optional 表达空缓存，返回值副本独立于内部容器。</span>
+<span class="tok-comment">// 运行结果：先输出 false，追加第二帧后旧快照仍打印 0.25。</span>
+
+<span class="tok-keyword">#include</span> <span class="tok-punct">&lt;</span>iostream<span class="tok-punct">&gt;</span>
 <span class="tok-keyword">#include</span> <span class="tok-punct">&lt;</span>optional<span class="tok-punct">&gt;</span>
 <span class="tok-keyword">#include</span> <span class="tok-punct">&lt;</span>vector<span class="tok-punct">&gt;</span>
 
@@ -332,7 +380,10 @@ std::cout &lt;&lt; wider_mm(right, right) &lt;&lt; '\n';</code></pre></div><p><s
 <p>给原来的 <code>History</code> 增加查询函数并修改 <code>append</code>。</p>
 </div>
 <div class="answer-step">
-<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-keyword">void</span> append<span class="tok-punct">(</span><span class="tok-type">Sample</span> sample<span class="tok-punct">)</span> <span class="tok-punct">{</span>
+<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-comment">// 为什么这样写：超过容量后移除最旧一帧，访问首项前先检查空容器。</span>
+<span class="tok-comment">// 运行结果：插入第 101 帧后最旧帧为 2，已复制的旧快照仍为 1。</span>
+
+<span class="tok-keyword">void</span> append<span class="tok-punct">(</span><span class="tok-type">Sample</span> sample<span class="tok-punct">)</span> <span class="tok-punct">{</span>
     samples_<span class="tok-punct">.</span>push_back<span class="tok-punct">(</span>sample<span class="tok-punct">)</span><span class="tok-punct">;</span>
     <span class="tok-keyword">if</span> <span class="tok-punct">(</span>samples_<span class="tok-punct">.</span>size<span class="tok-punct">(</span><span class="tok-punct">)</span> <span class="tok-punct">&gt;</span> <span class="tok-number">100</span><span class="tok-punct">)</span> <span class="tok-punct">{</span>
         samples_<span class="tok-punct">.</span>erase<span class="tok-punct">(</span>samples_<span class="tok-punct">.</span>begin<span class="tok-punct">(</span><span class="tok-punct">)</span><span class="tok-punct">)</span><span class="tok-punct">;</span>
@@ -353,7 +404,10 @@ std::cout &lt;&lt; wider_mm(right, right) &lt;&lt; '\n';</code></pre></div><p><s
 <ul class="concept-points"><li>用 <code>sizeof</code> 查看对象所占字节数，用 <code>alignof</code> 查看对齐要求。</li><li>成员之间和对象末尾可能有填充，<code>sizeof</code> 的结果受平台和类型布局影响。</li><li>把 <code>bool</code>、<code>double</code> 和 <code>int</code> 调换顺序，分别测量两种结构体。</li><li>对机器人数据包，应逐字段定义编码、字节序与长度。</li><li>结构体的内存布局由本地实现决定。</li></ul>
 </section><section class="lesson-block example"><h4>示例 2.3.1</h4><div class="example-frame"><p><code>std::cout &lt;&lt; sizeof(Sample) &lt;&lt; ' ' &lt;&lt; alignof(Sample);</code></p></div></section></div></div><div class="lesson-part"><h2>2. 练习题目与要求</h2><section class="lesson-block exercise"><h4>练习 2.3.1 · 编码故障码</h4><p><strong>任务</strong><br>将 0x0102 拆为高低两个字节，再还原为 16 位值。</p><p><strong>验收</strong><br>两个字节依次为 0x01、0x02，还原为 0x0102。</p></section></div><div class="lesson-part"><h2>3. 解答</h2><details id="stage-2-lesson-3-answers"><summary>解答 2.3.1 · 编码故障码</summary><h3>观察填充</h3>
 <div class="answer-step">
-<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-keyword">#include</span> <span class="tok-punct">&lt;</span>iostream<span class="tok-punct">&gt;</span>
+<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-comment">// 为什么这样写：分别测量两种字段顺序，观察实现插入的填充。</span>
+<span class="tok-comment">// 运行结果：具体字节数由平台决定，不能据此定义通信报文。</span>
+
+<span class="tok-keyword">#include</span> <span class="tok-punct">&lt;</span>iostream<span class="tok-punct">&gt;</span>
 <span class="tok-keyword">struct</span> <span class="tok-type">A</span> <span class="tok-punct">{</span> <span class="tok-keyword">bool</span> ready<span class="tok-punct">;</span> <span class="tok-keyword">double</span> angle<span class="tok-punct">;</span> <span class="tok-keyword">int</span> fault<span class="tok-punct">;</span> <span class="tok-punct">}</span><span class="tok-punct">;</span>
 <span class="tok-keyword">struct</span> <span class="tok-type">B</span> <span class="tok-punct">{</span> <span class="tok-keyword">double</span> angle<span class="tok-punct">;</span> <span class="tok-keyword">int</span> fault<span class="tok-punct">;</span> <span class="tok-keyword">bool</span> ready<span class="tok-punct">;</span> <span class="tok-punct">}</span><span class="tok-punct">;</span>
 
@@ -368,7 +422,10 @@ std::cout &lt;&lt; wider_mm(right, right) &lt;&lt; '\n';</code></pre></div><p><s
 <p><strong>核对结果</strong><br>两个字节依次为 0x01、0x02，还原为 0x0102。</p></details></div></section><section class="course-lesson" id="stage-2-lesson-4"><h2>第 4 课 · 编译单元、符号与调试</h2><div class="lesson-part"><h2>1. 概念与对应示例</h2><div class="lesson-key"><strong>本课要点</strong><ul class="concept-points"><li>声明使编译器知道接口，链接器从目标文件中找到对应实现。</li></ul></div><div class="concept-pair"><section class="lesson-block concept"><h4>概念 2.4.1</h4>
 <ul class="concept-points"><li>在具备 GCC 或 Clang sanitizer 运行库的 Linux 环境，用 <code>-g -O1 -fsanitize=address,undefined -fno-omit-frame-pointer</code> 重新编译并链接。</li><li>运行空缓存、单帧和超过容量的用例。</li><li>用调试器在 <code>append</code> 设置断点，查看调用栈和帧数据。</li></ul>
 </section><section class="lesson-block example"><h4>示例 2.4.1</h4><div class="example-frame">
-<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code>g<span class="tok-punct">+</span><span class="tok-punct">+</span> <span class="tok-punct">-</span><span class="tok-type">std</span><span class="tok-punct">=</span>c<span class="tok-punct">+</span><span class="tok-punct">+</span><span class="tok-number">17</span> <span class="tok-punct">-</span>g <span class="tok-punct">-</span>c history<span class="tok-punct">.</span>cpp <span class="tok-punct">-</span>o history<span class="tok-punct">.</span>o
+<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-comment"># 为什么这样写：-c 只生成目标文件，最后一条命令链接全部实现。</span>
+<span class="tok-comment"># 运行结果：省略 history.o 会导致未定义引用；补齐可生成程序。</span>
+
+g<span class="tok-punct">+</span><span class="tok-punct">+</span> <span class="tok-punct">-</span><span class="tok-type">std</span><span class="tok-punct">=</span>c<span class="tok-punct">+</span><span class="tok-punct">+</span><span class="tok-number">17</span> <span class="tok-punct">-</span>g <span class="tok-punct">-</span>c history<span class="tok-punct">.</span>cpp <span class="tok-punct">-</span>o history<span class="tok-punct">.</span>o
 g<span class="tok-punct">+</span><span class="tok-punct">+</span> <span class="tok-punct">-</span><span class="tok-type">std</span><span class="tok-punct">=</span>c<span class="tok-punct">+</span><span class="tok-punct">+</span><span class="tok-number">17</span> <span class="tok-punct">-</span>g <span class="tok-punct">-</span>c main<span class="tok-punct">.</span>cpp <span class="tok-punct">-</span>o main<span class="tok-punct">.</span>o
 g<span class="tok-punct">+</span><span class="tok-punct">+</span> main<span class="tok-punct">.</span>o history<span class="tok-punct">.</span>o <span class="tok-punct">-</span>o history_demo</code></pre></div>
 </div></section></div></div><div class="lesson-part"><h2>2. 练习题目与要求</h2><section class="lesson-block exercise"><h4>练习 2.4.1 · 分文件构建</h4><p><strong>任务</strong><br>拆分头文件、实现和入口，分别编译。<br class="sentence-break">分别试验漏链接和完整链接。</p><p><strong>验收</strong><br>漏掉 history.o 时出现未定义引用；补齐后可运行。</p></section></div><div class="lesson-part"><h2>3. 解答</h2><details id="stage-2-lesson-4-answers"><summary>解答 2.4.1 · 分文件构建</summary><h3>分文件与漏链接</h3>
@@ -389,7 +446,10 @@ g<span class="tok-punct">+</span><span class="tok-punct">+</span> main<span clas
 <ul class="concept-points"><li>构造时取得资源，析构时释放资源，这种做法叫 RAII。</li><li>文件流、容器和锁守卫都能按作用域自动清理资源。</li><li>成员已正确管理资源时，类通常可沿用编译器生成的特殊成员函数。</li><li>拷贝产生独立状态，移动可转移资源。</li><li><code>std::move</code> 使表达式可参与移动，具体效果由被调用操作决定。</li><li>移动后的标准库对象通常仍有效，具体值依类型契约而定。</li></ul>
 </section><section class="lesson-block example"><h4>示例 3.1.1</h4><div class="example-frame"><p>先运行课程中的示例，记录输出，再修改一个输入并比较结果。</p></div></section></div></div><div class="lesson-part"><h2>2. 练习题目与要求</h2><section class="lesson-block exercise"><h4>练习 3.1.1 · 用文件流读取遥测</h4><p><strong>任务</strong><br>读取第一条遥测，分别测试文件不存在、文件为空和有效文件。</p><p><strong>验收</strong><br>退出码分别为 1、2、0；成功时输出首行。</p></section></div><div class="lesson-part"><h2>3. 解答</h2><details id="stage-3-lesson-1-answers"><summary>解答 3.1.1 · 用文件流读取遥测</summary><h3>文件资源的释放</h3>
 <div class="answer-step">
-<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-keyword">#include</span> <span class="tok-punct">&lt;</span>fstream<span class="tok-punct">&gt;</span>
+<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-comment">// 为什么这样写：文件流在离开作用域时自动关闭，分开检查打开和读取。</span>
+<span class="tok-comment">// 运行结果：打开失败退出 1，首行不可读退出 2，成功打印首行。</span>
+
+<span class="tok-keyword">#include</span> <span class="tok-punct">&lt;</span>fstream<span class="tok-punct">&gt;</span>
 <span class="tok-keyword">#include</span> <span class="tok-punct">&lt;</span>iostream<span class="tok-punct">&gt;</span>
 <span class="tok-keyword">#include</span> <span class="tok-punct">&lt;</span>string<span class="tok-punct">&gt;</span>
 
@@ -417,7 +477,10 @@ g<span class="tok-punct">+</span><span class="tok-punct">+</span> main<span clas
 <p>在含有 <code>&lt;algorithm&gt;</code>、<code>&lt;array&gt;</code>、<code>&lt;cmath&gt;</code> 的程序中加入：</p>
 </div>
 <div class="answer-step">
-<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-keyword">const</span> <span class="tok-type">std</span><span class="tok-punct">:</span><span class="tok-punct">:</span>array<span class="tok-punct">&lt;</span><span class="tok-keyword">double</span><span class="tok-punct">,</span> <span class="tok-number">4</span><span class="tok-punct">&gt;</span> angles<span class="tok-punct">{</span><span class="tok-number">0.3</span><span class="tok-punct">,</span> <span class="tok-punct">-</span><span class="tok-number">1.5</span><span class="tok-punct">,</span> <span class="tok-number">1.6</span><span class="tok-punct">,</span> <span class="tok-punct">-</span><span class="tok-number">2.0</span><span class="tok-punct">}</span><span class="tok-punct">;</span>
+<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-comment">// 为什么这样写：按值捕获阈值，用同一谓词统计非有限值和越界值。</span>
+<span class="tok-comment">// 运行结果：bad 为 2，-1.5 正好在边界内。</span>
+
+<span class="tok-keyword">const</span> <span class="tok-type">std</span><span class="tok-punct">:</span><span class="tok-punct">:</span>array<span class="tok-punct">&lt;</span><span class="tok-keyword">double</span><span class="tok-punct">,</span> <span class="tok-number">4</span><span class="tok-punct">&gt;</span> angles<span class="tok-punct">{</span><span class="tok-number">0.3</span><span class="tok-punct">,</span> <span class="tok-punct">-</span><span class="tok-number">1.5</span><span class="tok-punct">,</span> <span class="tok-number">1.6</span><span class="tok-punct">,</span> <span class="tok-punct">-</span><span class="tok-number">2.0</span><span class="tok-punct">}</span><span class="tok-punct">;</span>
 <span class="tok-keyword">const</span> <span class="tok-keyword">double</span> limit<span class="tok-punct">{</span><span class="tok-number">1.5</span><span class="tok-punct">}</span><span class="tok-punct">;</span>
 <span class="tok-keyword">const</span> <span class="tok-keyword">auto</span> bad <span class="tok-punct">=</span> <span class="tok-type">std</span><span class="tok-punct">:</span><span class="tok-punct">:</span>count_if<span class="tok-punct">(</span>angles<span class="tok-punct">.</span>begin<span class="tok-punct">(</span><span class="tok-punct">)</span><span class="tok-punct">,</span> angles<span class="tok-punct">.</span>end<span class="tok-punct">(</span><span class="tok-punct">)</span><span class="tok-punct">,</span> <span class="tok-punct">[</span>limit<span class="tok-punct">]</span><span class="tok-punct">(</span><span class="tok-keyword">double</span> x<span class="tok-punct">)</span> <span class="tok-punct">{</span>
     <span class="tok-keyword">return</span> <span class="tok-punct">!</span><span class="tok-type">std</span><span class="tok-punct">:</span><span class="tok-punct">:</span>isfinite<span class="tok-punct">(</span>x<span class="tok-punct">)</span> <span class="tok-punct">|</span><span class="tok-punct">|</span> <span class="tok-type">std</span><span class="tok-punct">:</span><span class="tok-punct">:</span>abs<span class="tok-punct">(</span>x<span class="tok-punct">)</span> <span class="tok-punct">&gt;</span> limit<span class="tok-punct">;</span>
@@ -429,7 +492,10 @@ g<span class="tok-punct">+</span><span class="tok-punct">+</span> main<span clas
 <p><strong>核对结果</strong><br>越界 2 项；首项索引 2，值 1.6。</p></details></div></section><section class="course-lesson" id="stage-3-lesson-3"><h2>第 3 课 · 数据源接口、缺失与超时</h2><div class="lesson-part"><h2>1. 概念与对应示例</h2><div class="lesson-key"><strong>本课要点</strong><ul class="concept-points"><li>区分数据缺失、格式错误和过期。</li><li>缺失可用 optional，格式错误应包含行号。</li></ul></div><div class="concept-pair"><section class="lesson-block concept"><h4>概念 3.3.1</h4>
 <ul class="concept-points"><li>以下示例以单调时钟判断样本新鲜度，避免系统时间调整影响经过时长。</li><li>接口析构函数为虚函数，使通过基类指针销毁派生对象时执行正确的析构过程。</li><li>由调用者注入检查时间，测试可精确覆盖边界。</li></ul>
 </section><section class="lesson-block example"><h4>示例 3.3.1</h4><div class="example-frame">
-<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-keyword">#include</span> <span class="tok-punct">&lt;</span>algorithm<span class="tok-punct">&gt;</span>
+<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-comment">// 为什么这样写：注入检查时间使边界可重现，虚析构支持经基类释放对象。</span>
+<span class="tok-comment">// 运行结果：两行都打印 true，分别验证 100 ms 有效和 101 ms 超时。</span>
+
+<span class="tok-keyword">#include</span> <span class="tok-punct">&lt;</span>algorithm<span class="tok-punct">&gt;</span>
 <span class="tok-keyword">#include</span> <span class="tok-punct">&lt;</span>array<span class="tok-punct">&gt;</span>
 <span class="tok-keyword">#include</span> <span class="tok-punct">&lt;</span>chrono<span class="tok-punct">&gt;</span>
 <span class="tok-keyword">#include</span> <span class="tok-punct">&lt;</span>cmath<span class="tok-punct">&gt;</span>
@@ -492,7 +558,10 @@ g<span class="tok-punct">+</span><span class="tok-punct">+</span> main<span clas
 <p>以下实现可放在原示例的 <code>Source</code> 定义后，补充 <code>&lt;fstream&gt;</code>、<code>&lt;sstream&gt;</code>、<code>&lt;stdexcept&gt;</code>、<code>&lt;string&gt;</code> 和 <code>&lt;cstddef&gt;</code>。</p>
 </div>
 <div class="answer-step">
-<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-keyword">class</span> <span class="tok-type">EmptySource</span> <span class="tok-keyword">final</span> <span class="tok-punct">:</span> <span class="tok-keyword">public</span> <span class="tok-type">Source</span> <span class="tok-punct">{</span>
+<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-comment">// 为什么这样写：空值表示数据结束，坏行用异常携带行号。</span>
+<span class="tok-comment">// 运行结果：空源返回缺失；回放坏第二行报告 invalid row 2。</span>
+
+<span class="tok-keyword">class</span> <span class="tok-type">EmptySource</span> <span class="tok-keyword">final</span> <span class="tok-punct">:</span> <span class="tok-keyword">public</span> <span class="tok-type">Source</span> <span class="tok-punct">{</span>
 <span class="tok-keyword">public</span><span class="tok-punct">:</span>
     <span class="tok-type">std</span><span class="tok-punct">:</span><span class="tok-punct">:</span>optional<span class="tok-punct">&lt;</span><span class="tok-type">Sample</span><span class="tok-punct">&gt;</span> read<span class="tok-punct">(</span><span class="tok-punct">)</span> <span class="tok-keyword">override</span> <span class="tok-punct">{</span> <span class="tok-keyword">return</span> <span class="tok-type">std</span><span class="tok-punct">:</span><span class="tok-punct">:</span>nullopt<span class="tok-punct">;</span> <span class="tok-punct">}</span>
 <span class="tok-punct">}</span><span class="tok-punct">;</span>
@@ -541,7 +610,10 @@ g<span class="tok-punct">+</span><span class="tok-punct">+</span> main<span clas
 <p>采集线程先在局部变量里组好一帧，再用下列容器发布。<br class="sentence-break">监测线程读取一份副本，出锁后调用 <code>check</code>。</p>
 </div>
 <div class="answer-step">
-<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-comment">// 补充 #include &lt;mutex&gt;</span>
+<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-comment">// 为什么这样写：读写使用同一把锁，返回快照副本后自动释放锁。</span>
+<span class="tok-comment">// 运行结果：读取方拿到完整一帧；省略锁可能产生数据竞争。</span>
+
+<span class="tok-comment">// 补充 #include &lt;mutex&gt;</span>
 <span class="tok-keyword">class</span> <span class="tok-type">LatestSample</span> <span class="tok-punct">{</span>
 <span class="tok-keyword">public</span><span class="tok-punct">:</span>
     <span class="tok-keyword">void</span> publish<span class="tok-punct">(</span><span class="tok-keyword">const</span> <span class="tok-type">Sample</span><span class="tok-punct">&amp;</span> sample<span class="tok-punct">)</span> <span class="tok-punct">{</span>
@@ -576,20 +648,29 @@ g<span class="tok-punct">+</span><span class="tok-punct">+</span> main<span clas
 <ul class="concept-points"><li>公开声明放在 <code>include/</code>，实现放在 <code>src/</code>，测试放在 <code>tests/</code>。</li><li>让 CLI 和测试链接同一份库。</li><li>以下是最小可构建示例，依次保存各代码块。</li></ul>
 </section><section class="lesson-block example"><h4>示例 4.1.1</h4><div class="example-frame">
 <h3><code>include/monitor.hpp</code></h3>
-<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-keyword">#pragma</span> once
+<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-comment">// 为什么这样写：头文件声明可复用接口，pragma once 避免同一编译单元重复包含。</span>
+<span class="tok-comment">// 运行结果：调用方可编译对 valid_angle 的调用，链接时仍需要实现。</span>
+
+<span class="tok-keyword">#pragma</span> once
 
 <span class="tok-keyword">namespace</span> monitor <span class="tok-punct">{</span>
 <span class="tok-keyword">bool</span> valid_angle<span class="tok-punct">(</span><span class="tok-keyword">double</span> angle_rad<span class="tok-punct">)</span><span class="tok-punct">;</span>
 <span class="tok-punct">}</span></code></pre></div>
 <h3><code>src/monitor.cpp</code></h3>
-<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-keyword">#include</span> <span class="tok-string">&quot;monitor.hpp&quot;</span>
+<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-comment">// 为什么这样写：同时检查有限性与绝对值，集中定义闭区间规则。</span>
+<span class="tok-comment">// 运行结果：正负 1.5 均通过，NaN、无穷和越界值均失败。</span>
+
+<span class="tok-keyword">#include</span> <span class="tok-string">&quot;monitor.hpp&quot;</span>
 <span class="tok-keyword">#include</span> <span class="tok-punct">&lt;</span>cmath<span class="tok-punct">&gt;</span>
 
 <span class="tok-keyword">bool</span> monitor<span class="tok-punct">:</span><span class="tok-punct">:</span>valid_angle<span class="tok-punct">(</span><span class="tok-keyword">double</span> angle_rad<span class="tok-punct">)</span> <span class="tok-punct">{</span>
     <span class="tok-keyword">return</span> <span class="tok-type">std</span><span class="tok-punct">:</span><span class="tok-punct">:</span>isfinite<span class="tok-punct">(</span>angle_rad<span class="tok-punct">)</span> <span class="tok-punct">&amp;</span><span class="tok-punct">&amp;</span> <span class="tok-type">std</span><span class="tok-punct">:</span><span class="tok-punct">:</span>abs<span class="tok-punct">(</span>angle_rad<span class="tok-punct">)</span> <span class="tok-punct">&lt;</span><span class="tok-punct">=</span> <span class="tok-number">1.5</span><span class="tok-punct">;</span>
 <span class="tok-punct">}</span></code></pre></div>
 <h3><code>src/main.cpp</code></h3>
-<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-keyword">#include</span> <span class="tok-string">&quot;monitor.hpp&quot;</span>
+<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-comment">// 为什么这样写：先判断输入能否解析，再用同一库检查两臂。</span>
+<span class="tok-comment">// 运行结果：正常返回 0，越界返回 1，读取失败返回 2。</span>
+
+<span class="tok-keyword">#include</span> <span class="tok-string">&quot;monitor.hpp&quot;</span>
 <span class="tok-keyword">#include</span> <span class="tok-punct">&lt;</span>iostream<span class="tok-punct">&gt;</span>
 
 <span class="tok-keyword">int</span> main<span class="tok-punct">(</span><span class="tok-punct">)</span> <span class="tok-punct">{</span>
@@ -603,7 +684,10 @@ g<span class="tok-punct">+</span><span class="tok-punct">+</span> main<span clas
     <span class="tok-keyword">return</span> valid ? <span class="tok-number">0</span> <span class="tok-punct">:</span> <span class="tok-number">1</span><span class="tok-punct">;</span>
 <span class="tok-punct">}</span></code></pre></div>
 <h3><code>tests/monitor_test.cpp</code></h3>
-<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-keyword">#include</span> <span class="tok-string">&quot;monitor.hpp&quot;</span>
+<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-comment">// 为什么这样写：把边界与特殊浮点值列入同一回归测试。</span>
+<span class="tok-comment">// 运行结果：把 &lt;= 改为 &lt; 会使边界用例失败并返回 1。</span>
+
+<span class="tok-keyword">#include</span> <span class="tok-string">&quot;monitor.hpp&quot;</span>
 <span class="tok-keyword">#include</span> <span class="tok-punct">&lt;</span>iostream<span class="tok-punct">&gt;</span>
 <span class="tok-keyword">#include</span> <span class="tok-punct">&lt;</span>limits<span class="tok-punct">&gt;</span>
 
@@ -618,7 +702,10 @@ g<span class="tok-punct">+</span><span class="tok-punct">+</span> main<span clas
     <span class="tok-keyword">return</span> <span class="tok-number">0</span><span class="tok-punct">;</span>
 <span class="tok-punct">}</span></code></pre></div>
 <h3><code>CMakeLists.txt</code></h3>
-<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code>cmake_minimum_required<span class="tok-punct">(</span><span class="tok-type">VERSION</span> <span class="tok-number">3.16</span><span class="tok-punct">)</span>
+<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-comment"># 为什么这样写：将库、CLI 和测试做成独立目标，共用同一个监测库。</span>
+<span class="tok-comment"># 运行结果：构建生成程序和测试；关闭 BUILD_TESTING 后跳过测试目标。</span>
+
+cmake_minimum_required<span class="tok-punct">(</span><span class="tok-type">VERSION</span> <span class="tok-number">3.16</span><span class="tok-punct">)</span>
 project<span class="tok-punct">(</span>dual_arm_monitor <span class="tok-type">LANGUAGES</span> <span class="tok-type">CXX</span><span class="tok-punct">)</span>
 
 <span class="tok-keyword">add_library</span><span class="tok-punct">(</span>monitor src/monitor<span class="tok-punct">.</span>cpp<span class="tok-punct">)</span>
@@ -638,7 +725,10 @@ project<span class="tok-punct">(</span>dual_arm_monitor <span class="tok-type">L
 <div class="concept-pair"><section class="lesson-block concept"><h4>概念 4.1.2</h4>
 <ul class="concept-points"><li><code>PUBLIC</code> 把头文件目录与语言标准要求传给链接该库的目标。</li><li>用 <code>-S</code> 指定源码目录，<code>-B</code> 指定构建目录。</li><li>Visual Studio 等多配置生成器构建时加 <code>--config Debug</code>，测试时加 <code>-C Debug</code>，可执行文件通常在 <code>build/Debug/</code>。</li><li>Windows 使用 MinGW 时可在新构建目录配置时加 <code>-G &quot;MinGW Makefiles&quot;</code>，可执行文件带 <code>.exe</code> 后缀。</li></ul>
 </section><section class="lesson-block example"><h4>示例 4.1.2</h4><div class="example-frame">
-<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-keyword">cmake</span> <span class="tok-punct">-</span><span class="tok-type">S</span> <span class="tok-punct">.</span> <span class="tok-punct">-</span><span class="tok-type">B</span> build
+<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-comment"># 为什么这样写：分开配置、构建与测试，最后给程序传入一组数据。</span>
+<span class="tok-comment"># 运行结果：测试通过，合法角度打印 ok。</span>
+
+<span class="tok-keyword">cmake</span> <span class="tok-punct">-</span><span class="tok-type">S</span> <span class="tok-punct">.</span> <span class="tok-punct">-</span><span class="tok-type">B</span> build
 <span class="tok-keyword">cmake</span> <span class="tok-punct">-</span><span class="tok-punct">-</span>build build
 <span class="tok-keyword">ctest</span> <span class="tok-punct">-</span><span class="tok-punct">-</span>test<span class="tok-punct">-</span>dir build <span class="tok-punct">-</span><span class="tok-punct">-</span>output<span class="tok-punct">-</span>on<span class="tok-punct">-</span>failure
 echo <span class="tok-string">&quot;0.1 -0.2&quot;</span> <span class="tok-punct">|</span> <span class="tok-punct">.</span>/build/arm_monitor</code></pre></div>
@@ -655,7 +745,10 @@ echo <span class="tok-string">&quot;0.1 -0.2&quot;</span> <span class="tok-punct
 <p>此实现约定无空白的字段格式，使用点号作为小数点。<br class="sentence-break">解析错误返回空值，角度范围由原库单独判断。<br class="sentence-break">把下面的解析函数放到库实现文件，公开声明放到对应头文件。</p>
 </div>
 <div class="answer-step">
-<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-keyword">#include</span> <span class="tok-punct">&lt;</span>charconv<span class="tok-punct">&gt;</span>
+<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-comment">// 为什么这样写：严格检查分隔符、字段消耗和有限性，避免接受部分数字。</span>
+<span class="tok-comment">// 运行结果：格式错误返回空值，合法但越界的角度留给业务规则判断。</span>
+
+<span class="tok-keyword">#include</span> <span class="tok-punct">&lt;</span>charconv<span class="tok-punct">&gt;</span>
 <span class="tok-keyword">#include</span> <span class="tok-punct">&lt;</span>cmath<span class="tok-punct">&gt;</span>
 <span class="tok-keyword">#include</span> <span class="tok-punct">&lt;</span>locale<span class="tok-punct">&gt;</span>
 <span class="tok-keyword">#include</span> <span class="tok-punct">&lt;</span>optional<span class="tok-punct">&gt;</span>
@@ -717,13 +810,19 @@ echo <span class="tok-string">&quot;0.1 -0.2&quot;</span> <span class="tok-punct
 <div class="lesson-nav" aria-label="本阶段课节"><h2>本阶段课节</h2><ol><li><a href="#stage-5-lesson-1">工作空间、节点与消息</a></li><li><a href="#stage-5-lesson-2">发布模拟关节状态</a></li><li><a href="#stage-5-lesson-3">订阅、QoS 和状态诊断</a></li><li><a href="#stage-5-lesson-4">启动、录制与机器人集成</a></li></ol></div><section class="course-lesson" id="stage-5-lesson-1"><h2>第 1 课 · 工作空间、节点与消息</h2><div class="lesson-part"><h2>1. 概念与对应示例</h2><div class="lesson-key"><strong>本课要点</strong><ul class="concept-points"><li>工作空间包含多个包。</li><li>package.xml 记录依赖，构建成功后需加载安装环境才能通过 ROS 2 命令发现包。</li></ul></div><div class="concept-pair"><section class="lesson-block concept"><h4>概念 5.1.1</h4>
 <ul class="concept-points"><li>按安装文档准备 ROS 2 Jazzy、<code>ros-dev-tools</code> 和 <code>sensor_msgs</code>（Ubuntu 包名 <code>ros-jazzy-sensor-msgs</code>）。</li><li><code>colcon</code> 构建整个工作空间，<code>ament_cmake</code> 构建 CMake 软件包。</li><li>节点是执行单元，话题用于持续发布数据。</li><li>关节状态使用 <code>sensor_msgs/msg/JointState</code>，同一索引对应同一个关节。</li><li>转动关节位置用弧度，速度和力矩可在缺省时留空。</li></ul>
 </section><section class="lesson-block example"><h4>示例 5.1.1</h4><div class="example-frame">
-<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-keyword">source</span> /opt/ros/jazzy/setup<span class="tok-punct">.</span>bash
+<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-comment"># 为什么这样写：先加载 ROS 环境，再创建工作空间与包并声明依赖。</span>
+<span class="tok-comment"># 运行结果：生成 dual_arm_monitor 包；缺少环境时可能找不到 ros2 命令。</span>
+
+<span class="tok-keyword">source</span> /opt/ros/jazzy/setup<span class="tok-punct">.</span>bash
 mkdir <span class="tok-punct">-</span>p <span class="tok-punct">~</span>/dual_arm_ws/src
 cd <span class="tok-punct">~</span>/dual_arm_ws/src
 <span class="tok-keyword">ros2</span> pkg create <span class="tok-punct">-</span><span class="tok-punct">-</span>build<span class="tok-punct">-</span>type ament_cmake <span class="tok-punct">-</span><span class="tok-punct">-</span>dependencies <span class="tok-type">rclcpp</span> sensor_msgs <span class="tok-punct">-</span><span class="tok-punct">-</span> dual_arm_monitor</code></pre></div>
 </div></section></div></div><div class="lesson-part"><h2>2. 练习题目与要求</h2><section class="lesson-block exercise"><h4>练习 5.1.1 · 创建和验证 ROS 2 包</h4><p><strong>任务</strong><br>创建 dual_arm_monitor，检查 rclcpp 和 sensor_msgs 两项依赖，然后构建并加载。</p><p><strong>验收</strong><br>ros2 pkg prefix dual_arm_monitor 指向该工作空间的安装目录。</p></section></div><div class="lesson-part"><h2>3. 解答</h2><details id="stage-5-lesson-1-answers"><summary>解答 5.1.1 · 创建和验证 ROS 2 包</summary><p><code>colcon build --packages-select dual_arm_monitor</code><br><code>source install/setup.bash</code><br><code>ros2 pkg prefix dual_arm_monitor</code></p><p><strong>核对结果</strong><br>ros2 pkg prefix dual_arm_monitor 指向该工作空间的安装目录。</p></details></div></section><section class="course-lesson" id="stage-5-lesson-2"><h2>第 2 课 · 发布模拟关节状态</h2><div class="lesson-part"><h2>1. 概念与对应示例</h2><div class="lesson-key"><strong>本课要点</strong><ul class="concept-points"><li>参数在节点启动时读入，定时器每 100 ms 触发一次发布。</li></ul></div><div class="concept-pair"><section class="lesson-block concept"><h4>概念 5.2.1</h4><ul class="concept-points"><li>发布器负责向话题发送消息。定时器让节点周期性生成一条模拟关节状态。</li></ul></section><section class="lesson-block example"><h4>示例 5.2.1</h4><div class="example-frame">
 <p>将下面代码保存到 <code>dual_arm_monitor/src/joint_demo.cpp</code>。<br class="sentence-break">定时器每 100 ms 发布两个模拟关节的名称、位置和时间戳。<br class="sentence-break">参数启动时读取。<br class="sentence-break">节点、发布器和定时器在运行期间保持存活。</p>
-<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-keyword">#include</span> <span class="tok-punct">&lt;</span>chrono<span class="tok-punct">&gt;</span>
+<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-comment">// 为什么这样写：将发布器和定时器存为成员，使其随节点存活。</span>
+<span class="tok-comment">// 运行结果：约每 100 ms 发布一帧，右臂位置使用启动参数值。</span>
+
+<span class="tok-keyword">#include</span> <span class="tok-punct">&lt;</span>chrono<span class="tok-punct">&gt;</span>
 <span class="tok-keyword">#include</span> <span class="tok-punct">&lt;</span>memory<span class="tok-punct">&gt;</span>
 <span class="tok-keyword">#include</span> <span class="tok-punct">&lt;</span><span class="tok-type">rclcpp</span>/<span class="tok-type">rclcpp</span><span class="tok-punct">.</span>hpp<span class="tok-punct">&gt;</span>
 <span class="tok-keyword">#include</span> <span class="tok-punct">&lt;</span>sensor_msgs/msg/joint_state<span class="tok-punct">.</span>hpp<span class="tok-punct">&gt;</span>
@@ -757,11 +856,17 @@ cd <span class="tok-punct">~</span>/dual_arm_ws/src
     <span class="tok-keyword">return</span> <span class="tok-number">0</span><span class="tok-punct">;</span>
 <span class="tok-punct">}</span></code></pre></div>
 <p>在生成的 <code>CMakeLists.txt</code> 中把以下内容放在 <code>ament_package()</code> 之前。<br class="sentence-break">建包命令已声明依赖，保留生成的 <code>find_package</code> 与 <code>package.xml</code>。</p>
-<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-keyword">add_executable</span><span class="tok-punct">(</span>joint_demo src/joint_demo<span class="tok-punct">.</span>cpp<span class="tok-punct">)</span>
+<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-comment"># 为什么这样写：声明节点目标、ROS 依赖和安装路径。</span>
+<span class="tok-comment"># 运行结果：构建安装后 ros2 run 能找到 joint_demo。</span>
+
+<span class="tok-keyword">add_executable</span><span class="tok-punct">(</span>joint_demo src/joint_demo<span class="tok-punct">.</span>cpp<span class="tok-punct">)</span>
 <span class="tok-keyword">target_compile_features</span><span class="tok-punct">(</span>joint_demo <span class="tok-type">PRIVATE</span> cxx_std_17<span class="tok-punct">)</span>
 ament_target_dependencies<span class="tok-punct">(</span>joint_demo <span class="tok-type">rclcpp</span> sensor_msgs<span class="tok-punct">)</span>
 <span class="tok-keyword">install</span><span class="tok-punct">(</span><span class="tok-type">TARGETS</span> joint_demo <span class="tok-type">DESTINATION</span> lib/$<span class="tok-punct">{</span><span class="tok-type">PROJECT_NAME</span><span class="tok-punct">}</span><span class="tok-punct">)</span></code></pre></div>
-<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code>cd <span class="tok-punct">~</span>/dual_arm_ws
+<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-comment"># 为什么这样写：先构建目标包，再加载安装环境，最后覆盖参数。</span>
+<span class="tok-comment"># 运行结果：右臂发布 1.6 rad；未加载环境时可能找不到包。</span>
+
+cd <span class="tok-punct">~</span>/dual_arm_ws
 <span class="tok-keyword">colcon</span> build <span class="tok-punct">-</span><span class="tok-punct">-</span>packages<span class="tok-punct">-</span>select dual_arm_monitor
 <span class="tok-keyword">source</span> <span class="tok-keyword">install</span>/setup<span class="tok-punct">.</span>bash
 <span class="tok-keyword">ros2</span> run dual_arm_monitor joint_demo <span class="tok-punct">-</span><span class="tok-punct">-</span>ros<span class="tok-punct">-</span>args <span class="tok-punct">-</span>p right_rad<span class="tok-punct">:</span><span class="tok-punct">=</span><span class="tok-number">1.6</span></code></pre></div>
@@ -773,7 +878,10 @@ ament_target_dependencies<span class="tok-punct">(</span>joint_demo <span class=
 <p><strong>核对结果</strong><br>right_joint_1 的位置先为 -0.2，再为 1.6 rad。</p></details></div></section><section class="course-lesson" id="stage-5-lesson-3"><h2>第 3 课 · 订阅、QoS 和状态诊断</h2><div class="lesson-part"><h2>1. 概念与对应示例</h2><div class="lesson-key"><strong>本课要点</strong><ul class="concept-points"><li>关节名决定数据归属。</li><li>接收时间使用本地单调时钟，和消息时间戳是两个不同的量。</li></ul></div><div class="concept-pair"><section class="lesson-block concept"><h4>概念 5.3.1</h4>
 <ul class="concept-points"><li>创建第二个节点，保留订阅对象为成员。</li><li>可先在构造函数中加入以下订阅语句，再把示例日志替换为实际判定。</li><li>成员类型为 <code>rclcpp::Subscription&lt;JointState&gt;::SharedPtr</code>。</li></ul>
 </section><section class="lesson-block example"><h4>示例 5.3.1</h4><div class="example-frame">
-<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code>subscription_ <span class="tok-punct">=</span> create_subscription<span class="tok-punct">&lt;</span><span class="tok-type">JointState</span><span class="tok-punct">&gt;</span><span class="tok-punct">(</span>
+<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-comment">// 为什么这样写：保存订阅句柄，回调内先检查数组长度。</span>
+<span class="tok-comment">// 运行结果：坏帧打印警告，有效帧打印收到的关节数量。</span>
+
+subscription_ <span class="tok-punct">=</span> create_subscription<span class="tok-punct">&lt;</span><span class="tok-type">JointState</span><span class="tok-punct">&gt;</span><span class="tok-punct">(</span>
     <span class="tok-string">&quot;joint_states&quot;</span><span class="tok-punct">,</span> <span class="tok-type">rclcpp</span><span class="tok-punct">:</span><span class="tok-punct">:</span><span class="tok-type">QoS</span><span class="tok-punct">(</span><span class="tok-number">10</span><span class="tok-punct">)</span><span class="tok-punct">,</span>
     <span class="tok-punct">[</span><span class="tok-keyword">this</span><span class="tok-punct">]</span><span class="tok-punct">(</span><span class="tok-type">JointState</span><span class="tok-punct">:</span><span class="tok-punct">:</span><span class="tok-type">ConstSharedPtr</span> message<span class="tok-punct">)</span> <span class="tok-punct">{</span>
         <span class="tok-keyword">if</span> <span class="tok-punct">(</span>message<span class="tok-punct">-</span><span class="tok-punct">&gt;</span>name<span class="tok-punct">.</span>size<span class="tok-punct">(</span><span class="tok-punct">)</span> <span class="tok-punct">!</span><span class="tok-punct">=</span> message<span class="tok-punct">-</span><span class="tok-punct">&gt;</span>position<span class="tok-punct">.</span>size<span class="tok-punct">(</span><span class="tok-punct">)</span><span class="tok-punct">)</span> <span class="tok-punct">{</span>
@@ -788,7 +896,10 @@ ament_target_dependencies<span class="tok-punct">(</span>joint_demo <span class=
 </div>
 <div class="answer-step">
 <p>保存为 <code>src/joint_monitor.cpp</code>。</p>
-<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-keyword">#include</span> <span class="tok-punct">&lt;</span>chrono<span class="tok-punct">&gt;</span>
+<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-comment">// 为什么这样写：按名称关联位置，用单调时钟监测最后接收时间。</span>
+<span class="tok-comment">// 运行结果：重排数组仍能正确判定；停发超过阈值后提示超时。</span>
+
+<span class="tok-keyword">#include</span> <span class="tok-punct">&lt;</span>chrono<span class="tok-punct">&gt;</span>
 <span class="tok-keyword">#include</span> <span class="tok-punct">&lt;</span>cstddef<span class="tok-punct">&gt;</span>
 <span class="tok-keyword">#include</span> <span class="tok-punct">&lt;</span>memory<span class="tok-punct">&gt;</span>
 <span class="tok-keyword">#include</span> <span class="tok-punct">&lt;</span>optional<span class="tok-punct">&gt;</span>
@@ -861,7 +972,10 @@ ament_target_dependencies<span class="tok-punct">(</span>joint_demo <span class=
 <p>在 <code>ament_package()</code> 前追加：</p>
 </div>
 <div class="answer-step">
-<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-keyword">add_library</span><span class="tok-punct">(</span>monitor <span class="tok-type">STATIC</span> src/monitor<span class="tok-punct">.</span>cpp<span class="tok-punct">)</span>
+<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-comment"># 为什么这样写：把共用规则编成库并链接到监测节点，同时安装启动文件。</span>
+<span class="tok-comment"># 运行结果：节点和 launch 都可被 ROS 2 找到；缺少链接会造成未定义符号。</span>
+
+<span class="tok-keyword">add_library</span><span class="tok-punct">(</span>monitor <span class="tok-type">STATIC</span> src/monitor<span class="tok-punct">.</span>cpp<span class="tok-punct">)</span>
 <span class="tok-keyword">target_include_directories</span><span class="tok-punct">(</span>monitor <span class="tok-type">PUBLIC</span> <span class="tok-keyword">include</span><span class="tok-punct">)</span>
 <span class="tok-keyword">target_compile_features</span><span class="tok-punct">(</span>monitor <span class="tok-type">PUBLIC</span> cxx_std_17<span class="tok-punct">)</span>
 
@@ -871,7 +985,10 @@ ament_target_dependencies<span class="tok-punct">(</span>joint_monitor <span cla
 <span class="tok-keyword">install</span><span class="tok-punct">(</span><span class="tok-type">TARGETS</span> joint_monitor <span class="tok-type">DESTINATION</span> lib/$<span class="tok-punct">{</span><span class="tok-type">PROJECT_NAME</span><span class="tok-punct">}</span><span class="tok-punct">)</span>
 <span class="tok-keyword">install</span><span class="tok-punct">(</span><span class="tok-type">DIRECTORY</span> <span class="tok-keyword">launch</span> <span class="tok-type">DESTINATION</span> share/$<span class="tok-punct">{</span><span class="tok-type">PROJECT_NAME</span><span class="tok-punct">}</span><span class="tok-punct">)</span></code></pre></div>
 <p>构建前将前文 XML 保存到 <code>launch/monitor.launch.xml</code>。<br class="sentence-break">重新构建并加载安装目录。<br class="sentence-break">在测试异常帧前单独启动 <code>joint_monitor</code> 并停止模拟发布器，便于观察单条消息的结果。<br class="sentence-break">交换关节顺序的命令如下。</p>
-<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-keyword">ros2</span> topic pub <span class="tok-punct">-</span><span class="tok-punct">-</span>once /joint_states sensor_msgs/msg/<span class="tok-type">JointState</span> \
+<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-comment"># 为什么这样写：刻意交换关节顺序，验证订阅按名称而非固定索引匹配。</span>
+<span class="tok-comment"># 运行结果：单帧应报告左臂正常、右臂异常。</span>
+
+<span class="tok-keyword">ros2</span> topic pub <span class="tok-punct">-</span><span class="tok-punct">-</span>once /joint_states sensor_msgs/msg/<span class="tok-type">JointState</span> \
   <span class="tok-string">&quot;{name: [right_joint_1, left_joint_1], position: [1.6, 0.25]}&quot;</span></code></pre></div>
 <div class="table"><table><tr><th>发出的名称与位置</th><th>预期日志</th></tr><tr><td><code>[right_joint_1, left_joint_1]</code>，<code>[1.6, 0.25]</code></td><td>left=ok right=invalid</td></tr><tr><td><code>[left_joint_1]</code>，<code>[0.25]</code></td><td>missing expected joint</td></tr><tr><td><code>[left_joint_1, left_joint_1]</code>，<code>[0.25, 0.30]</code></td><td>duplicate joint</td></tr><tr><td><code>[left_joint_1, right_joint_1]</code>，<code>[0.25]</code></td><td>name and position lengths differ</td></tr><tr><td>停止发布超过 500 ms</td><td>reception timeout，定时器在下一次检查时报告</td></tr></table></div>
 </div>
@@ -879,7 +996,10 @@ ament_target_dependencies<span class="tok-punct">(</span>joint_monitor <span cla
 <p>QoS 练习可将发布器改为 <code>rclcpp::QoS(10).best_effort()</code>，订阅器保留默认可靠设置。<br class="sentence-break">预期收不到样本。<br class="sentence-break">用 <code>ros2 topic info /joint_states --verbose</code> 对照两端可靠性，订阅端也改用 best effort 后应恢复接收。</p>
 </div>
 <p><strong>核对结果</strong><br>重排后仍能报告左臂正常、右臂异常；停发超过 500 ms 后报告超时。</p></details></div></section><section class="course-lesson" id="stage-5-lesson-4"><h2>第 4 课 · 启动、录制与机器人集成</h2><div class="lesson-part"><h2>1. 概念与对应示例</h2><div class="lesson-key"><strong>本课要点</strong><ul class="concept-points"><li>Launch 管理节点启动，rosbag 重放消息，URDF 与 TF 用来解释关节运动对应的坐标变换。</li></ul></div><div class="concept-pair"><section class="lesson-block concept"><h4>概念 5.4.1</h4><ul class="concept-points"><li>启动文件统一配置节点与参数。录制工具保存消息，回放时可以复现诊断结果。</li></ul></section><section class="lesson-block example"><h4>示例 5.4.1</h4><div class="example-frame">
-<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-punct">&lt;</span><span class="tok-keyword">launch</span><span class="tok-punct">&gt;</span>
+<div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-comment">&lt;!-- 为什么这样写：用同一个 launch 启动发布与监测节点，预置越界参数。 --&gt;</span>
+<span class="tok-comment">&lt;!-- 运行结果：启动后右臂报告异常。 --&gt;</span>
+
+<span class="tok-punct">&lt;</span><span class="tok-keyword">launch</span><span class="tok-punct">&gt;</span>
   <span class="tok-punct">&lt;</span><span class="tok-keyword">node</span> pkg<span class="tok-punct">=</span><span class="tok-string">&quot;dual_arm_monitor&quot;</span> exec<span class="tok-punct">=</span><span class="tok-string">&quot;joint_demo&quot;</span><span class="tok-punct">&gt;</span>
     <span class="tok-punct">&lt;</span><span class="tok-keyword">param</span> name<span class="tok-punct">=</span><span class="tok-string">&quot;right_rad&quot;</span> value<span class="tok-punct">=</span><span class="tok-string">&quot;1.6&quot;</span>/<span class="tok-punct">&gt;</span>
   <span class="tok-punct">&lt;</span>/<span class="tok-keyword">node</span><span class="tok-punct">&gt;</span>
@@ -887,13 +1007,19 @@ ament_target_dependencies<span class="tok-punct">(</span>joint_monitor <span cla
 <span class="tok-punct">&lt;</span>/<span class="tok-keyword">launch</span><span class="tok-punct">&gt;</span></code></pre></div>
 <p>将订阅目标命名为 <code>joint_monitor</code> 并与 <code>joint_demo</code> 一起安装。<br class="sentence-break">录制时运行 <code>ros2 bag record -o arm_trial /joint_states</code>，采集几秒后按 Ctrl+C 结束。<br class="sentence-break">回放前停止模拟发布器，保持监测节点运行，执行 <code>ros2 bag play arm_trial</code>，验证再次报告右臂越界。</p>
 </div></section></div></div><div class="lesson-part"><h2>2. 练习题目与要求</h2><section class="lesson-block exercise"><h4>练习 5.4.1 · 启动、录制与回放</h4><p><strong>任务</strong><br>用 launch 同时启动两节点，录制 /joint_states，停止原发布器后回放。</p><p><strong>验收</strong><br>bag 包含 /joint_states，回放再次报告右臂越界。</p></section>
-<section class="lesson-block exercise"><h4>练习 5.4.2 · 建立双臂坐标关系</h4><p><strong>任务</strong><br>用 URDF 定义两个关节，启动 robot_state_publisher，观察 base_link 到 right_link 的变换。</p><p><strong>验收</strong><br>右关节角度改变时，right_link 相对 base_link 的旋转随之改变。</p></section></div><div class="lesson-part"><h2>3. 解答</h2><details id="stage-5-lesson-4-answers"><summary>解答 5.4.1 · 启动、录制与回放</summary><p><strong>实现步骤</strong><br>在 launch 文件声明 joint_demo 与 joint_monitor，并为 joint_demo 传 right_rad=1.6。<br class="sentence-break">安装 launch 目录，重新构建并加载环境。<br class="sentence-break">启动后用 ros2 bag record -o arm_trial /joint_states 录制，结束录制和 launch。<br class="sentence-break">单独启动 joint_monitor，再运行 ros2 bag play arm_trial。</p><div class="snippet"><button class="copy" type="button">复制代码</button><pre><code>&lt;launch&gt;
+<section class="lesson-block exercise"><h4>练习 5.4.2 · 建立双臂坐标关系</h4><p><strong>任务</strong><br>用 URDF 定义两个关节，启动 robot_state_publisher，观察 base_link 到 right_link 的变换。</p><p><strong>验收</strong><br>右关节角度改变时，right_link 相对 base_link 的旋转随之改变。</p></section></div><div class="lesson-part"><h2>3. 解答</h2><details id="stage-5-lesson-4-answers"><summary>解答 5.4.1 · 启动、录制与回放</summary><p><strong>实现步骤</strong><br>在 launch 文件声明 joint_demo 与 joint_monitor，并为 joint_demo 传 right_rad=1.6。<br class="sentence-break">安装 launch 目录，重新构建并加载环境。<br class="sentence-break">启动后用 ros2 bag record -o arm_trial /joint_states 录制，结束录制和 launch。<br class="sentence-break">单独启动 joint_monitor，再运行 ros2 bag play arm_trial。</p><div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-comment">&lt;!-- 为什么这样写：发布节点使用 1.6 rad 作为可复现输入，监测节点负责诊断。 --&gt;</span>
+<span class="tok-comment">&lt;!-- 运行结果：录制后回放相同消息可再次观察右臂异常。 --&gt;</span>
+
+&lt;launch&gt;
   &lt;node pkg="dual_arm_monitor" exec="joint_demo"&gt;
     &lt;param name="right_rad" value="1.6"/&gt;
   &lt;/node&gt;
   &lt;node pkg="dual_arm_monitor" exec="joint_monitor"/&gt;
 &lt;/launch&gt;</code></pre></div><p><strong>核对结果</strong><br>bag 包含 /joint_states，回放再次报告右臂越界。</p></details>
-<details><summary>解答 5.4.2 · 建立双臂坐标关系</summary><p><strong>实现步骤</strong><br>在 URDF 中定义 base_link、left_link、right_link。<br class="sentence-break">创建两个 continuous 关节，父链接均为 base_link，子链接分别为 left_link 和 right_link，旋转轴设为 0 0 1。<br class="sentence-break">将 URDF 作为 robot_description 参数启动 robot_state_publisher，发布名称匹配的 JointState，再运行 ros2 run tf2_ros tf2_echo base_link right_link 对比两个角度。</p><div class="snippet"><button class="copy" type="button">复制代码</button><pre><code>&lt;robot name="dual_arm_demo"&gt;
+<details><summary>解答 5.4.2 · 建立双臂坐标关系</summary><p><strong>实现步骤</strong><br>在 URDF 中定义 base_link、left_link、right_link。<br class="sentence-break">创建两个 continuous 关节，父链接均为 base_link，子链接分别为 left_link 和 right_link，旋转轴设为 0 0 1。<br class="sentence-break">将 URDF 作为 robot_description 参数启动 robot_state_publisher，发布名称匹配的 JointState，再运行 ros2 run tf2_ros tf2_echo base_link right_link 对比两个角度。</p><div class="snippet"><button class="copy" type="button">复制代码</button><pre><code><span class="tok-comment">&lt;!-- 为什么这样写：两个关节共用基座并绕 Z 轴旋转，名称需与消息一致。 --&gt;</span>
+<span class="tok-comment">&lt;!-- 运行结果：右关节角度变化后可观察 right_link 相对基座的旋转变化。 --&gt;</span>
+
+&lt;robot name="dual_arm_demo"&gt;
   &lt;link name="base_link"/&gt;
   &lt;link name="left_link"/&gt;
   &lt;link name="right_link"/&gt;
